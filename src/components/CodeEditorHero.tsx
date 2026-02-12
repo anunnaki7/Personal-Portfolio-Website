@@ -353,7 +353,7 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
   };
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-0 lg:h-screen lg:max-h-screen">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-0 lg:h-screen lg:min-h-0 lg:max-h-screen lg:overflow-hidden">
       {/* Background layers */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a0000] via-[#0a0a0a] to-[#1a0000]" />
       <BinaryBackground />
@@ -392,7 +392,7 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
       <div className="container mx-auto px-4 md:px-6 lg:px-8 z-10 max-w-5xl lg:max-w-4xl xl:max-w-5xl">
         {/* Status bar - Hacker style */}
         <motion.div
-          className="flex items-center justify-center gap-4 mb-4 lg:mb-5 font-mono text-xs"
+          className="flex items-center justify-center gap-4 mb-4 lg:mb-3 font-mono text-xs"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -419,7 +419,7 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
 
         {/* N.L Logo */}
         <motion.div
-          className="flex justify-center mb-6 lg:mb-5"
+          className="flex justify-center mb-6 lg:mb-3"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -606,11 +606,11 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
             </div>
 
             {/* Code Content */}
-            <div className="relative z-10 p-4 md:p-5 lg:p-5 font-['Fira_Code','JetBrains_Mono',monospace] text-sm md:text-base lg:text-[15px] overflow-x-auto">
+            <div className="relative z-10 p-4 md:p-5 lg:p-4 font-['Fira_Code','JetBrains_Mono',monospace] text-sm md:text-base lg:text-[14px] overflow-x-auto">
               {codeLines.map((line, index) => (
                 <motion.div
                   key={line.num}
-                  className="flex items-start gap-4 leading-6 md:leading-7 lg:leading-7 group"
+                  className="flex items-start gap-4 leading-6 md:leading-7 lg:leading-6 group"
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ 
                     opacity: index < visibleLines ? 1 : 0,
@@ -701,7 +701,7 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center mt-8 lg:mt-6"
+          className="flex flex-col sm:flex-row gap-4 justify-center mt-8 lg:mt-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: visibleLines >= codeLines.length ? 1 : 0, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
@@ -742,7 +742,7 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
 
         {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-4 lg:bottom-6 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-2 lg:bottom-4 left-1/2 transform -translate-x-1/2"
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
           initial={{ opacity: 0 }}
