@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <filter id="g">
+      <feGaussianBlur stdDeviation="1.5" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="8" fill="#0a0a0a"/>
+  <rect x="2" y="2" width="60" height="60" rx="6" fill="none" stroke="#ff0040" stroke-width="1.5" opacity="0.4"/>
+  <!-- N -->
+  <path d="M12 48 L12 16 L17 16 L34 42 L34 16 L40 16 L40 48 L35 48 L18 22 L18 48 Z" fill="#ff0040" filter="url(#g)"/>
+  <!-- dot -->
+  <circle cx="45" cy="44" r="2.5" fill="#ff0040" filter="url(#g)"/>
+  <!-- L -->
+  <path d="M49 16 L55 16 L55 42 L64 42 L64 48 L49 48 Z" fill="#ff0040" filter="url(#g)"/>
+  <!-- accent lines -->
+  <line x1="4" y1="12" x2="14" y2="12" stroke="#ff0040" stroke-width="0.5" opacity="0.3"/>
+  <line x1="50" y1="12" x2="60" y2="12" stroke="#ff0040" stroke-width="0.5" opacity="0.3"/>
+</svg>

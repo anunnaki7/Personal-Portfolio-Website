@@ -8,12 +8,16 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { Terminal } from './components/Terminal';
 import { Background3D } from './components/Background3D';
+import { EasterEgg } from './components/EasterEgg';
+import { BackToTop } from './components/BackToTop';
 import Preloader from './components/Preloader';
 
 export function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const [secretInput, setSecretInput] = useState('');
+  const [logoClickCount, setLogoClickCount] = useState(0);
+  const [logoClickTimer, setLogoClickTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   // Handle keyboard shortcuts and secret commands
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -48,8 +52,26 @@ export function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  // Logo click handler - 5 clicks triggers Easter Egg, single clicks for terminal still work via CodeEditorHero
   const handleLogoClick = () => {
-    setIsTerminalOpen(true);
+    const newCount = logoClickCount + 1;
+    setLogoClickCount(newCount);
+
+    if (logoClickTimer) clearTimeout(logoClickTimer);
+
+    const timer = setTimeout(() => {
+      setLogoClickCount(0);
+    }, 2000);
+    setLogoClickTimer(timer);
+
+    // 5 clicks → Easter Egg
+    if (newCount >= 5) {
+      setLogoClickCount(0);
+      if (logoClickTimer) clearTimeout(logoClickTimer);
+      // Trigger easter egg
+      const trigger = (window as unknown as Record<string, (() => void) | undefined>).__easterEggTrigger;
+      if (trigger) trigger();
+    }
   };
 
   return (
@@ -86,6 +108,12 @@ export function App() {
 
         {/* Secret Terminal */}
         <Terminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
+
+        {/* Easter Egg Overlay */}
+        <EasterEgg />
+
+        {/* Back to Top Button */}
+        <BackToTop />
 
         {/* Secret hint indicator */}
         {secretInput.length > 0 && secretInput.length < 7 && (
