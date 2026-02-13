@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200, height=630">
+  <title>OG Preview Generator - Screenshot this at 1200x630</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      width: 1200px;
+      height: 630px;
+      background: #000000;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Grid background */
+    .grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,0,64,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,0,64,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      transform: perspective(500px) rotateX(60deg);
+      transform-origin: center 120%;
+    }
+    
+    /* Center glow */
+    .glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(255,0,64,0.15) 0%, transparent 70%);
+      filter: blur(60px);
+    }
+    
+    /* Scanlines */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.1) 2px,
+        rgba(0,0,0,0.1) 4px
+      );
+      pointer-events: none;
+    }
+    
+    /* Content */
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 10;
+    }
+    
+    /* Logo */
+    .logo {
+      font-size: 140px;
+      font-weight: 900;
+      color: #ff0040;
+      letter-spacing: 20px;
+      text-shadow: 
+        0 0 20px rgba(255,0,64,0.8),
+        0 0 40px rgba(255,0,64,0.6),
+        0 0 80px rgba(255,0,64,0.4),
+        0 0 120px rgba(255,0,64,0.2);
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    /* Glitch layers */
+    .logo::before {
+      content: 'N.L';
+      position: absolute;
+      left: 3px;
+      top: 0;
+      color: cyan;
+      opacity: 0.3;
+      clip-path: inset(0 0 50% 0);
+    }
+    
+    .logo::after {
+      content: 'N.L';
+      position: absolute;
+      left: -3px;
+      top: 0;
+      color: #ff0040;
+      opacity: 0.3;
+      clip-path: inset(50% 0 0 0);
+    }
+    
+    /* Name */
+    .name {
+      font-size: 42px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 8px;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+    
+    /* Title */
+    .title {
+      font-size: 24px;
+      color: #888888;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+    }
+    
+    .title span {
+      color: #ff0040;
+    }
+    
+    /* Terminal text */
+    .terminal {
+      position: absolute;
+      bottom: 40px;
+      left: 50px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: rgba(255,0,64,0.4);
+      text-align: left;
+    }
+    
+    .terminal-right {
+      position: absolute;
+      bottom: 40px;
+      right: 50px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: rgba(255,0,64,0.4);
+      text-align: right;
+    }
+    
+    /* Corner decorations */
+    .corner {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border: 2px solid rgba(255,0,64,0.3);
+    }
+    
+    .corner.tl { top: 30px; left: 30px; border-right: none; border-bottom: none; }
+    .corner.tr { top: 30px; right: 30px; border-left: none; border-bottom: none; }
+    .corner.bl { bottom: 30px; left: 30px; border-right: none; border-top: none; }
+    .corner.br { bottom: 30px; right: 30px; border-left: none; border-top: none; }
+    
+    /* Glitch line */
+    .glitch-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,0,64,0.5), transparent);
+    }
+    
+    .glitch-line.l1 { top: 180px; }
+    .glitch-line.l2 { top: 450px; }
+  </style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="glow"></div>
+  <div class="scanlines"></div>
+  
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  
+  <div class="glitch-line l1"></div>
+  <div class="glitch-line l2"></div>
+  
+  <div class="content">
+    <div class="logo">N.L</div>
+    <div class="name">Nikola Lutovac</div>
+    <div class="title"><span>Vibe Coding</span> Developer</div>
+  </div>
+  
+  <div class="terminal">
+    > portfolio.execute()<br>
+    > status: online
+  </div>
+  
+  <div class="terminal-right">
+    [ SYSTEM READY ]<br>
+    v2.0.26
+  </div>
+</body>
+</html>
