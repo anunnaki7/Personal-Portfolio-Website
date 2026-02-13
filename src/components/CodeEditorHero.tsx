@@ -353,7 +353,7 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
   };
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-0 lg:h-screen lg:min-h-0 lg:max-h-screen lg:overflow-hidden">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-4 lg:min-h-screen lg:h-auto">
       {/* Background layers */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a0000] via-[#0a0a0a] to-[#1a0000]" />
       <BinaryBackground />
