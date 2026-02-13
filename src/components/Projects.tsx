@@ -214,15 +214,15 @@ function ProjectCard({ project, index }: ProjectCardProps) {
                 onLoad={() => setImageLoaded(true)}
                 onError={handleImageError}
                 animate={{ 
-                  scale: isHovered ? 1.08 : 1,
-                  filter: isHovered ? 'brightness(0.7)' : 'brightness(0.5)',
+                  scale: isHovered ? 1.05 : 1,
+                  filter: isHovered ? 'brightness(1) contrast(1.1)' : 'brightness(0.9) contrast(1.05)',
                 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               />
-              {/* Gradient overlays */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              {/* Gradient overlays - reduced opacity for better image visibility */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
               <motion.div 
-                className="absolute inset-0 bg-gradient-to-br from-[#ff0040]/0 to-[#ff0040]/20"
+                className="absolute inset-0 bg-gradient-to-br from-transparent to-[#ff0040]/10"
                 animate={{ opacity: isHovered ? 1 : 0 }}
                 transition={{ duration: 0.4 }}
               />

@@ -112,9 +112,6 @@ export function App() {
         {/* Easter Egg Overlay */}
         <EasterEgg />
 
-        {/* Back to Top Button */}
-        <BackToTop />
-
         {/* Secret hint indicator */}
         {secretInput.length > 0 && secretInput.length < 7 && (
           <div className="fixed bottom-4 left-4 text-[#ff0040]/50 font-mono text-xs z-50">
@@ -122,6 +119,9 @@ export function App() {
           </div>
         )}
       </div>
+
+      {/* Back to Top Button - Outside all containers for true fixed positioning */}
+      <BackToTop />
     </>
   );
 }

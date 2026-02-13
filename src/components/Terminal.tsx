@@ -188,10 +188,10 @@ Type 'github' to view source code.
 ╔══════════════════════════════════════╗
 ║         CONTACT INFORMATION          ║
 ╠══════════════════════════════════════╣
-║  Email:    contact@nikola.dev        ║
-║  GitHub:   github.com/nikolalutovac  ║
-║  LinkedIn: linkedin.com/in/nikola    ║
-║  Twitter:  @nikola_dev               ║
+║  Email:    dzoni.luta07@gmail.com    ║
+║  GitHub:   github.com                ║
+║  Instagram: @38nikola                ║
+║  LinkedIn: linkedin.com              ║
 ╚══════════════════════════════════════╝
 `
         }]);

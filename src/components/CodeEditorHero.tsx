@@ -740,24 +740,37 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
           </motion.a>
         </motion.div>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator - positioned below buttons with clear separation */}
         <motion.div
-          className="absolute bottom-2 lg:bottom-4 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
+          className="relative z-20 flex justify-center mt-8 lg:mt-6"
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          animate={{ opacity: visibleLines >= codeLines.length ? 1 : 0 }}
+          transition={{ delay: 1, duration: 0.6 }}
         >
-          <div className="flex flex-col items-center gap-1 lg:gap-2">
-            <span className="text-[#ff0040]/50 text-[10px] lg:text-xs font-mono">SCROLL</span>
-            <div className="w-5 h-8 lg:w-6 lg:h-9 border-2 border-[#ff0040]/50 rounded-full flex justify-center">
+          <motion.a
+            href="#about"
+            className="flex flex-col items-center gap-2 cursor-pointer group"
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <span 
+              className="text-[#ff0040]/70 text-xs font-mono tracking-widest group-hover:text-[#ff0040] transition-colors duration-300"
+              style={{ textShadow: '0 0 8px rgba(255,0,64,0.3)' }}
+            >
+              SCROLL
+            </span>
+            <div 
+              className="w-6 h-10 border-2 border-[#ff0040]/60 rounded-full flex justify-center group-hover:border-[#ff0040] transition-colors duration-300"
+              style={{ boxShadow: '0 0 10px rgba(255,0,64,0.15), inset 0 0 6px rgba(255,0,64,0.1)' }}
+            >
               <motion.div
-                className="w-1 h-1 lg:w-1.5 lg:h-1.5 bg-[#ff0040] rounded-full mt-2"
-                animate={{ y: [0, 12, 0] }}
+                className="w-1.5 h-1.5 bg-[#ff0040] rounded-full mt-2"
+                animate={{ y: [0, 16, 0], opacity: [1, 0.5, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
+                style={{ boxShadow: '0 0 6px rgba(255,0,64,0.6)' }}
               />
             </div>
-          </div>
+          </motion.a>
         </motion.div>
       </div>
     </section>

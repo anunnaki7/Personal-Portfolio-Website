@@ -76,7 +76,7 @@ export function About() {
                     <div className="text-sm text-gray-500">Years Exp</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-[#ff0040] neon-glow">20+</div>
+                    <div className="text-3xl font-bold text-[#ff0040] neon-glow">2+</div>
                     <div className="text-sm text-gray-500">Projects</div>
                   </div>
                   <div className="text-center">

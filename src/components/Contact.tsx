@@ -48,7 +48,7 @@ export function Contact() {
     },
     {
       name: 'Email',
-      url: 'mailto:contact@nikola.dev',
+      url: 'mailto:dzoni.luta07@gmail.com',
       icon: (
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -172,10 +172,30 @@ export function Contact() {
               <h3 className="text-2xl font-bold text-white font-['Orbitron'] mb-6">
                 <span className="text-[#ff0040]">//</span> Connect With Me
               </h3>
-              <p className="text-gray-400 mb-8">
+              <p className="text-gray-400 mb-4">
                 I'm always open to discussing new projects, creative ideas, or opportunities to be 
                 part of your vision. Feel free to reach out through any of these platforms.
               </p>
+              
+              {/* Direct Email Link */}
+              <motion.a
+                href="mailto:dzoni.luta07@gmail.com"
+                className="inline-flex items-center gap-3 px-4 py-3 mb-8 rounded-lg border border-[#ff0040]/30 
+                  hover:border-[#ff0040] hover:bg-[#ff0040]/10 transition-all group"
+                initial={{ opacity: 0, y: 10 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.7 }}
+                whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(255, 0, 64, 0.3)' }}
+              >
+                <span className="text-[#ff0040] group-hover:scale-110 transition-transform">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </span>
+                <span className="text-[#ff0040] font-mono text-sm md:text-base" style={{ textShadow: '0 0 10px rgba(255,0,64,0.3)' }}>
+                  dzoni.luta07@gmail.com
+                </span>
+              </motion.a>
               
               {/* Social Links */}
               <div className="grid grid-cols-2 gap-4">
@@ -213,17 +233,7 @@ export function Contact() {
           </motion.div>
         </div>
 
-        {/* Footer */}
-        <motion.footer
-          className="mt-20 text-center text-gray-500 text-sm"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 1.4 }}
-        >
-          <p className="font-mono">
-            <span className="text-[#ff0040]">&lt;/&gt;</span> Built with passion by Nikola Lutovac © {new Date().getFullYear()}
-          </p>
-        </motion.footer>
+        {/* Footer removed - using Footer.tsx component instead */}
       </div>
     </section>
   );
