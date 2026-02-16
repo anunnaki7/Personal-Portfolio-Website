@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <filter id="glow">
+    <!-- Neon glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="1.5" result="blur"/>
       <feMerge>
-        <feMergeNode in="blur"/>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
@@ -11,21 +11,25 @@
   </defs>
   
   <!-- Background -->
-  <rect width="64" height="64" rx="10" fill="#0a0a0a"/>
+  <rect width="64" height="64" rx="10" fill="#000000"/>
   
-  <!-- Border with glow -->
-  <rect x="2" y="2" width="60" height="60" rx="8" fill="none" stroke="#ff0040" stroke-width="1" opacity="0.5"/>
+  <!-- Subtle border -->
+  <rect x="1" y="1" width="62" height="62" rx="9" fill="none" stroke="#ff0040" stroke-width="1.5" opacity="0.5"/>
   
-  <!-- N letter - repositioned -->
-  <path d="M10 50 L10 14 L16 14 L30 40 L30 14 L36 14 L36 50 L30 50 L16 24 L16 50 Z" fill="#ff0040" filter="url(#glow)"/>
+  <!-- N letter - exact same size as L -->
+  <!-- Height: 28px, Width: 16px -->
+  <path d="M12 18 L12 46 L16 46 L16 28 L24 46 L28 46 L28 18 L24 18 L24 36 L16 18 Z" 
+        fill="#ff0040" filter="url(#glow)"/>
   
   <!-- Dot separator -->
-  <circle cx="41" cy="46" r="2.5" fill="#ff0040" filter="url(#glow)"/>
+  <circle cx="32" cy="42" r="3" fill="#ff0040" filter="url(#glow)"/>
   
-  <!-- L letter - fixed, properly inside bounds -->
-  <path d="M46 14 L52 14 L52 44 L60 44 L60 50 L46 50 Z" fill="#ff0040" filter="url(#glow)"/>
+  <!-- L letter - exact same size as N -->
+  <!-- Height: 28px, Width: 16px -->
+  <path d="M36 18 L36 46 L52 46 L52 42 L40 42 L40 18 Z" 
+        fill="#ff0040" filter="url(#glow)"/>
   
-  <!-- Top accent lines -->
-  <line x1="4" y1="8" x2="16" y2="8" stroke="#ff0040" stroke-width="0.75" opacity="0.4"/>
-  <line x1="48" y1="8" x2="60" y2="8" stroke="#ff0040" stroke-width="0.75" opacity="0.4"/>
+  <!-- Top accent line -->
+  <line x1="12" y1="10" x2="28" y2="10" stroke="#ff0040" stroke-width="1" opacity="0.4"/>
+  <line x1="36" y1="10" x2="52" y2="10" stroke="#ff0040" stroke-width="1" opacity="0.4"/>
 </svg>
