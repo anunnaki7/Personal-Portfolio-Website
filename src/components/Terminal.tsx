@@ -1,6 +1,31 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Hacker closing sound
+const playClosingSound = () => {
+  try {
+    const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // Digital shutdown sound - descending tone
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.3);
+    
+    gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.35);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.35);
+  } catch {
+    // Silent fail
+  }
+};
+
 // Ultra Mode activation sound
 const playUltraSound = () => {
   try {
@@ -78,6 +103,9 @@ export function Terminal({ isOpen, onClose, startInUltraMode = false }: Terminal
   const [isUltraMode, setIsUltraMode] = useState(false);
   const [showUltraGlitch, setShowUltraGlitch] = useState(false);
   const [showOmegaOverlay, setShowOmegaOverlay] = useState(false);
+  // Hacker-style closing states
+  const [isClosing, setIsClosing] = useState(false);
+  const [closingText, setClosingText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const hasBootedRef = useRef(false);
@@ -91,6 +119,32 @@ export function Terminal({ isOpen, onClose, startInUltraMode = false }: Terminal
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
   };
+
+  // Hacker-style closing sequence
+  const initiateHackerClose = useCallback(() => {
+    if (isClosing) return;
+    
+    playClosingSound();
+    setIsClosing(true);
+    
+    // Phase 1: Glitch effect
+    setClosingText('TERMINATING...');
+    
+    setTimeout(() => {
+      setClosingText('CONNECTION LOST');
+    }, 200);
+    
+    setTimeout(() => {
+      setClosingText('SIGNAL TERMINATED');
+    }, 400);
+    
+    setTimeout(() => {
+      setClosingText('');
+      setIsClosing(false);
+      setIsUltraMode(false);
+      onClose();
+    }, 700);
+  }, [isClosing, onClose]);
 
   useEffect(() => {
     scrollToBottom();
@@ -595,7 +649,7 @@ ${recentVisits || '  No visits recorded yet.'}
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
-      onClose();
+      initiateHackerClose();
     }
     playSound('key');
   };
@@ -611,36 +665,70 @@ ${recentVisits || '  No visits recorded yet.'}
           transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
           style={{ willChange: 'opacity' }}
         >
-          {/* Backdrop with blur */}
+          {/* Backdrop with blur - Enhanced for Ultra Mode */}
           <motion.div
-            className="absolute inset-0 bg-black/70 backdrop-blur-md"
-            onClick={onClose}
+            className={`absolute inset-0 ${
+              isUltraMode || startInUltraMode
+                ? 'bg-black/85 backdrop-blur-xl'
+                : 'bg-black/70 backdrop-blur-md'
+            }`}
+            onClick={initiateHackerClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.12 }}
+            transition={{ duration: isUltraMode || startInUltraMode ? 0.4 : 0.12, ease: 'easeOut' }}
             style={{ 
               willChange: 'opacity',
-              WebkitBackdropFilter: 'blur(10px)',
-              backdropFilter: 'blur(10px)'
+              WebkitBackdropFilter: isUltraMode || startInUltraMode ? 'blur(20px)' : 'blur(10px)',
+              backdropFilter: isUltraMode || startInUltraMode ? 'blur(20px)' : 'blur(10px)'
             }}
           />
           
-          {/* Terminal Window */}
+          {/* Ultra Mode Spotlight/Vignette Effect */}
+          {(isUltraMode || startInUltraMode) && (
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              style={{
+                background: 'radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.8) 100%)',
+              }}
+            />
+          )}
+          
+          {/* Subtle red ambient glow for Ultra Mode */}
+          {(isUltraMode || startInUltraMode) && (
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              style={{
+                background: 'radial-gradient(ellipse at center, rgba(255,0,64,0.15) 0%, transparent 60%)',
+              }}
+            />
+          )}
+          
+          {/* Terminal Window - Enhanced glow for Ultra Mode */}
           <motion.div
             className="relative w-[95vw] sm:w-full max-w-4xl h-[85dvh] sm:h-[80vh] max-h-[600px] bg-black/95 rounded-lg overflow-hidden"
             initial={{ opacity: 0, scale: 0.985, y: 6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: 4 }}
             transition={{ 
-              duration: 0.14, 
+              duration: isUltraMode || startInUltraMode ? 0.25 : 0.14, 
               ease: [0.22, 1, 0.36, 1]
             }}
             style={{ 
               willChange: 'transform, opacity',
-              border: `1px solid rgba(255, 0, 64, ${0.4 + glowIntensity * 0.6})`,
-              boxShadow: `0 0 ${40 + glowIntensity * 30}px rgba(255, 0, 64, ${0.15 + glowIntensity * 0.15}), 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(255, 0, 64, 0.03)`,
-              transition: 'box-shadow 150ms ease-out, border-color 150ms ease-out'
+              border: `${isUltraMode ? '2px' : '1px'} solid rgba(255, 0, 64, ${isUltraMode ? 0.9 : 0.4 + glowIntensity * 0.6})`,
+              boxShadow: isUltraMode 
+                ? `0 0 80px rgba(255, 0, 64, 0.4), 0 0 120px rgba(255, 0, 64, 0.2), 0 25px 50px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(255, 0, 64, 0.05)`
+                : `0 0 ${40 + glowIntensity * 30}px rgba(255, 0, 64, ${0.15 + glowIntensity * 0.15}), 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(255, 0, 64, 0.03)`,
+              transition: 'box-shadow 300ms ease-out, border-color 300ms ease-out, border-width 300ms ease-out'
             }}
           >
             {/* Ultra Glitch Overlay */}
@@ -658,6 +746,84 @@ ${recentVisits || '  No visits recorded yet.'}
                     background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,0,64,0.1) 2px, rgba(255,0,64,0.1) 4px)',
                     animation: 'glitch-shift 0.1s infinite'
                   }} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Hacker Closing Overlay */}
+            <AnimatePresence>
+              {isClosing && (
+                <motion.div
+                  className="absolute inset-0 z-[60] flex items-center justify-center bg-black/95"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  {/* Glitch background */}
+                  <div className="absolute inset-0 overflow-hidden">
+                    {/* Scan lines */}
+                    <div 
+                      className="absolute inset-0" 
+                      style={{ 
+                        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,0,64,0.1) 2px, rgba(255,0,64,0.1) 4px)' 
+                      }} 
+                    />
+                    {/* Horizontal glitch bars */}
+                    <motion.div 
+                      className="absolute h-8 w-full bg-[#ff0040]/20"
+                      animate={{ top: ['0%', '100%'] }}
+                      transition={{ duration: 0.3, ease: 'linear' }}
+                    />
+                    <motion.div 
+                      className="absolute h-4 w-full bg-[#00ffff]/10"
+                      animate={{ top: ['100%', '0%'] }}
+                      transition={{ duration: 0.25, ease: 'linear' }}
+                    />
+                  </div>
+                  
+                  {/* Main closing text */}
+                  <motion.div
+                    className="text-center z-10"
+                    initial={{ scale: 1.2, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <motion.div 
+                      className="text-2xl sm:text-4xl font-bold text-[#ff0040] font-['Orbitron'] mb-2"
+                      style={{ textShadow: '0 0 20px rgba(255, 0, 64, 0.8), 0 0 40px rgba(255, 0, 64, 0.5)' }}
+                      animate={{ 
+                        x: [0, -3, 3, -2, 2, 0],
+                        opacity: [1, 0.8, 1, 0.9, 1]
+                      }}
+                      transition={{ duration: 0.2, repeat: 2 }}
+                    >
+                      {closingText || 'DISCONNECTING...'}
+                    </motion.div>
+                    
+                    {/* Signal bars */}
+                    <div className="flex justify-center gap-1 mt-4">
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="w-2 h-4 bg-[#ff0040]"
+                          initial={{ opacity: 1, scaleY: 1 }}
+                          animate={{ opacity: 0, scaleY: 0 }}
+                          transition={{ delay: i * 0.1, duration: 0.2 }}
+                        />
+                      ))}
+                    </div>
+                    
+                    <motion.div 
+                      className="text-sm text-[#ff0040]/60 font-mono mt-3"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      {'>'} connection_terminated
+                    </motion.div>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -712,7 +878,7 @@ ${recentVisits || '  No visits recorded yet.'}
                 {isUltraMode ? 'nl@portfolio:~# [OMEGA]' : 'nl@portfolio:~$'}
               </span>
               <button
-                onClick={onClose}
+                onClick={initiateHackerClose}
                 className="text-[#ff0040] hover:text-white transition-colors font-mono"
               >
                 [X]
