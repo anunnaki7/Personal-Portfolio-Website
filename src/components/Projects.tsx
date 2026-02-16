@@ -567,7 +567,7 @@ export function Projects() {
           transition={{ delay: 0.8 }}
         >
           <motion.a
-            href="https://github.com"
+            href="https://github.com/anunnaki7?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative inline-flex items-center gap-3 px-8 py-3.5 font-['Orbitron'] font-bold text-sm
