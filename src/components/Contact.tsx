@@ -58,10 +58,10 @@ export function Contact() {
   ];
 
   return (
-    <section id="contact" className="py-20 relative z-10">
+    <section id="contact" className="py-16 md:py-20 lg:py-24 relative z-10">
       <div className="container mx-auto px-6" ref={ref}>
         {/* Section Title */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-12 lg:mb-16">
           <motion.h2
             className="text-4xl md:text-5xl font-bold font-['Orbitron'] mb-4"
             initial={{ opacity: 0, y: 20 }}
@@ -83,7 +83,7 @@ export function Contact() {
           </motion.p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-10 lg:gap-12 max-w-5xl mx-auto">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}

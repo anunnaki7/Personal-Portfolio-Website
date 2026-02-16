@@ -23,7 +23,7 @@ export function BackToTop() {
       onMouseLeave={() => setIsHovered(false)}
       aria-label="Back to top"
       className={`fixed z-[9999] w-11 h-11 md:w-12 md:h-12
-        flex items-center justify-center rounded-lg cursor-pointer
+        flex items-center justify-center rounded-full cursor-pointer
         transition-all duration-500 ease-out group
         ${isVisible 
           ? 'opacity-100 pointer-events-auto' 
@@ -32,17 +32,17 @@ export function BackToTop() {
       style={{
         bottom: '24px',
         right: '24px',
-        background: isHovered
-          ? 'linear-gradient(135deg, rgba(255,0,64,0.2) 0%, rgba(20,0,5,0.95) 100%)'
-          : 'linear-gradient(135deg, rgba(20,0,5,0.95) 0%, rgba(10,5,5,0.98) 100%)',
-        border: `1px solid ${isHovered ? 'rgba(255,0,64,0.9)' : 'rgba(255,0,64,0.4)'}`,
-        boxShadow: isHovered
-          ? '0 0 30px rgba(255,0,64,0.5), 0 0 60px rgba(255,0,64,0.2), inset 0 0 20px rgba(255,0,64,0.1)'
-          : '0 0 15px rgba(255,0,64,0.15), inset 0 0 10px rgba(255,0,64,0.05)',
-        backdropFilter: 'blur(12px)',
         transform: isVisible 
-          ? `translateY(0) scale(${isHovered ? 1.08 : 1})` 
-          : 'translateY(20px) scale(1)',
+          ? `scale(${isHovered ? 1.1 : 1})` 
+          : 'translateY(20px) scale(0.9)',
+        background: isHovered
+          ? 'linear-gradient(135deg, rgba(255,0,64,0.25) 0%, rgba(20,0,5,0.95) 100%)'
+          : 'linear-gradient(135deg, rgba(20,0,5,0.95) 0%, rgba(10,5,5,0.98) 100%)',
+        border: `2px solid ${isHovered ? 'rgba(255,0,64,1)' : 'rgba(255,0,64,0.5)'}`,
+        boxShadow: isHovered
+          ? '0 0 35px rgba(255,0,64,0.6), 0 0 70px rgba(255,0,64,0.3), inset 0 0 20px rgba(255,0,64,0.15)'
+          : '0 0 20px rgba(255,0,64,0.2), inset 0 0 10px rgba(255,0,64,0.05)',
+        backdropFilter: 'blur(12px)',
       }}
     >
       {/* Arrow icon */}
@@ -54,9 +54,8 @@ export function BackToTop() {
         className="transition-all duration-300"
         style={{
           filter: isHovered
-            ? 'drop-shadow(0 0 10px rgba(255,0,64,0.9))'
-            : 'drop-shadow(0 0 4px rgba(255,0,64,0.5))',
-          transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+            ? 'drop-shadow(0 0 12px rgba(255,0,64,1))'
+            : 'drop-shadow(0 0 5px rgba(255,0,64,0.6))',
         }}
       >
         <path

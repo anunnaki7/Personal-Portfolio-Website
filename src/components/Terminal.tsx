@@ -1,6 +1,32 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Ultra Mode activation sound
+const playUltraSound = () => {
+  try {
+    const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // Digital distortion sound
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.setValueAtTime(80, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(250, audioContext.currentTime + 0.1);
+    oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.25);
+    
+    gainNode.gain.setValueAtTime(0.04, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch {
+    // Silent fail
+  }
+};
+
 const ASCII_LOGO = `
 ███╗   ██╗██╗     
 ████╗  ██║██║     
@@ -10,9 +36,28 @@ const ASCII_LOGO = `
 ╚═╝  ╚═══╝╚══════╝
 `;
 
+// Time-based greeting helper
+const getTimeBasedGreeting = (): string => {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return 'Good morning';
+  if (hour >= 12 && hour < 18) return 'Good afternoon';
+  return 'Good evening';
+};
+
+// Check if operator mode is active
+const isOperatorMode = (): boolean => {
+  return localStorage.getItem('nl_operator_mode') === 'true';
+};
+
+// Set operator mode
+const setOperatorMode = (): void => {
+  localStorage.setItem('nl_operator_mode', 'true');
+};
+
 interface TerminalProps {
   isOpen: boolean;
   onClose: () => void;
+  startInUltraMode?: boolean;
 }
 
 interface HistoryItem {
@@ -20,14 +65,26 @@ interface HistoryItem {
   content: string;
 }
 
-export function Terminal({ isOpen, onClose }: TerminalProps) {
+export function Terminal({ isOpen, onClose, startInUltraMode = false }: TerminalProps) {
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isHacking, setIsHacking] = useState(false);
   const [hackProgress, setHackProgress] = useState(0);
   const [showAccessGranted, setShowAccessGranted] = useState(false);
+  const [isRootAccess, setIsRootAccess] = useState(false);
+  const [isBooting, setIsBooting] = useState(true);
+  const [glowIntensity, setGlowIntensity] = useState(0);
+  // Ultra Mode states
+  const [isUltraMode, setIsUltraMode] = useState(false);
+  const [showUltraGlitch, setShowUltraGlitch] = useState(false);
+  const [showOmegaOverlay, setShowOmegaOverlay] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const hasBootedRef = useRef(false);
+  const isFirstOpenRef = useRef(true);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const longPressTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const keysPressed = useRef<Set<string>>(new Set());
 
   const scrollToBottom = () => {
     if (terminalRef.current) {
@@ -39,16 +96,185 @@ export function Terminal({ isOpen, onClose }: TerminalProps) {
     scrollToBottom();
   }, [history]);
 
+  // Ultra Mode activation function
+  const activateUltraMode = useCallback(() => {
+    if (isUltraMode) return;
+    
+    // Play sound
+    playUltraSound();
+    
+    // Show glitch effect
+    setShowUltraGlitch(true);
+    
+    setTimeout(() => {
+      setShowUltraGlitch(false);
+      setIsUltraMode(true);
+      
+      // Add Ultra Mode message to terminal
+      setHistory(prev => [...prev, 
+        { type: 'output', content: '' },
+        { type: 'success', content: '[ULTRA MODE ACTIVATED]' },
+        { type: 'success', content: 'Clearance level: OMEGA' },
+        { type: 'success', content: 'Welcome back, Operator.' },
+        { type: 'output', content: '' },
+      ]);
+    }, 300);
+  }, [isUltraMode]);
+
+  // Auto-activate Ultra Mode if startInUltraMode is true
+  useEffect(() => {
+    if (isOpen && startInUltraMode && !isUltraMode) {
+      // Small delay to let terminal render first
+      const timer = setTimeout(() => {
+        activateUltraMode();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, startInUltraMode, isUltraMode, activateUltraMode]);
+
+  // Keyboard activation: Shift + N + L
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      keysPressed.current.add(e.key.toLowerCase());
+      
+      // Check for Shift + N + L
+      if (e.shiftKey && keysPressed.current.has('n') && keysPressed.current.has('l')) {
+        activateUltraMode();
+      }
+    };
+    
+    const handleKeyUp = (e: KeyboardEvent) => {
+      keysPressed.current.delete(e.key.toLowerCase());
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      keysPressed.current.clear();
+    };
+  }, [isOpen, activateUltraMode]);
+
+  // Mobile long press on header (1.5s)
+  const handleHeaderTouchStart = useCallback(() => {
+    longPressTimerRef.current = setTimeout(() => {
+      activateUltraMode();
+    }, 1500);
+  }, [activateUltraMode]);
+
+  const handleHeaderTouchEnd = useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  }, []);
+
+  // Typewriter effect for premium feel
+  const typewriterEffect = useCallback((lines: HistoryItem[], callback?: () => void) => {
+    let currentIndex = 0;
+    const typeNextLine = () => {
+      if (currentIndex < Math.min(lines.length, 3)) {
+        const line = lines[currentIndex];
+        const chars = line.content.split('');
+        let charIndex = 0;
+        
+        // Add empty line first
+        setHistory(prev => [...prev, { ...line, content: '' }]);
+        
+        const typeChar = () => {
+          if (charIndex < chars.length) {
+            setHistory(prev => {
+              const newHistory = [...prev];
+              const lastItem = newHistory[newHistory.length - 1];
+              lastItem.content = chars.slice(0, charIndex + 1).join('');
+              return newHistory;
+            });
+            charIndex++;
+            setTimeout(typeChar, 40); // 40ms per character
+          } else {
+            currentIndex++;
+            setTimeout(typeNextLine, 60);
+          }
+        };
+        typeChar();
+      } else {
+        // Add remaining lines instantly
+        setHistory(prev => [...prev, ...lines.slice(currentIndex)]);
+        callback?.();
+      }
+    };
+    typeNextLine();
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
-      setHistory([
-        { type: 'ascii', content: ASCII_LOGO },
-        { type: 'output', content: 'NIKOLA LUTOVAC TERMINAL v1.0.0' },
-        { type: 'output', content: 'Type "help" for available commands.\n' },
-      ]);
-      setTimeout(() => inputRef.current?.focus(), 100);
+      // Animate glow intensity
+      setGlowIntensity(0);
+      const glowTimer = setTimeout(() => setGlowIntensity(1), 50);
+      
+      // Boot delay only on first open (80ms for premium feel)
+      const bootDelay = hasBootedRef.current ? 0 : 80;
+      const useTypewriter = isFirstOpenRef.current;
+      hasBootedRef.current = true;
+      isFirstOpenRef.current = false;
+      
+      setIsBooting(true);
+      
+      const bootTimer = setTimeout(() => {
+        // Check for operator mode (returning user)
+        if (isOperatorMode()) {
+          // Returning user - show recognition protocol
+          const greeting = getTimeBasedGreeting();
+          const lines: HistoryItem[] = [
+            { type: 'success', content: '[RECOGNITION PROTOCOL INITIATED...]' },
+            { type: 'output', content: '' },
+            { type: 'success', content: `${greeting}, Operator.` },
+            { type: 'output', content: '' },
+            { type: 'output', content: 'System integrity: STABLE' },
+            { type: 'output', content: 'Access level: ROOT' },
+            { type: 'output', content: 'Memory state: RESTORED' },
+            { type: 'output', content: '' },
+            { type: 'output', content: 'Type "help" for available commands.\n' },
+          ];
+          
+          if (useTypewriter) {
+            setHistory([]);
+            typewriterEffect(lines, () => setIsBooting(false));
+          } else {
+            setHistory(lines);
+            setIsBooting(false);
+          }
+        } else {
+          // First time user - show default intro and set operator mode
+          const lines: HistoryItem[] = [
+            { type: 'ascii', content: ASCII_LOGO },
+            { type: 'output', content: 'NIKOLA LUTOVAC TERMINAL v1.0.0' },
+            { type: 'output', content: 'Type "help" for available commands.\n' },
+          ];
+          
+          if (useTypewriter) {
+            setHistory([]);
+            typewriterEffect(lines, () => setIsBooting(false));
+          } else {
+            setHistory(lines);
+            setIsBooting(false);
+          }
+          // Set operator mode for next time
+          setOperatorMode();
+        }
+        inputRef.current?.focus();
+      }, bootDelay);
+      
+      return () => {
+        clearTimeout(bootTimer);
+        clearTimeout(glowTimer);
+      };
     }
-  }, [isOpen]);
+  }, [isOpen, typewriterEffect]);
 
   const playSound = (type: 'key' | 'success' | 'error') => {
     // Audio context for sound effects
@@ -86,6 +312,32 @@ export function Terminal({ isOpen, onClose }: TerminalProps) {
     
     setHistory(prev => [...prev, { type: 'input', content: `> ${cmd}` }]);
     
+    // Check for sudo nl --root command
+    if (command === 'sudo nl --root') {
+      setIsRootAccess(true);
+      playSound('success');
+      
+      setHistory(prev => [...prev, {
+        type: 'success',
+        content: '\n[ROOT ACCESS GRANTED]'
+      }]);
+      
+      setTimeout(() => {
+        setHistory(prev => [...prev, {
+          type: 'success',
+          content: 'Redirecting to GODMODE...'
+        }]);
+      }, 400);
+      
+      setTimeout(() => {
+        // Set sessionStorage and navigate
+        sessionStorage.setItem('godmode', 'true');
+        window.location.href = '/godmode';
+      }, 1200);
+      
+      return;
+    }
+    
     switch (command) {
       case 'help':
         setHistory(prev => [...prev, {
@@ -99,6 +351,7 @@ Available Commands:
   projects - List all projects
   github   - Open GitHub profile
   contact  - Contact information
+  visits   - View visitor log
   hack     - [CLASSIFIED] Mini-game
   clear    - Clear terminal
   exit     - Close terminal
@@ -114,8 +367,8 @@ Available Commands:
 ║           NIKOLA LUTOVAC             ║
 ╠══════════════════════════════════════╣
 ║  Location: Montenegro                ║
-║  Role: Full Stack Developer          ║
-║  Experience: 5+ years                ║
+║  Role: Vibe Coding Developer         ║
+║  Experience: 1+ year                 ║
 ║  Passion: Building digital dreams    ║
 ╚══════════════════════════════════════╝
 
@@ -197,6 +450,46 @@ Type 'github' to view source code.
         }]);
         break;
         
+      case 'visits':
+      case 'log':
+      case 'history':
+        const totalVisits = localStorage.getItem('nl_total_visits') || '0';
+        const firstVisit = localStorage.getItem('nl_first_visit');
+        const lastVisit = localStorage.getItem('nl_last_visit');
+        const visits = JSON.parse(localStorage.getItem('nl_visits') || '[]');
+        
+        const firstDate = firstVisit ? new Date(firstVisit).toLocaleDateString('en-GB', {
+          year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) : 'N/A';
+        
+        const lastDate = lastVisit ? new Date(lastVisit).toLocaleDateString('en-GB', {
+          year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) : 'N/A';
+        
+        // Get last 5 visits for display
+        const recentVisits = visits.slice(0, 5).map((v: { date: string; time: string; device: string; screen: string }, i: number) => 
+          `  ${i + 1}. ${v.date} at ${v.time} (${v.device}, ${v.screen})`
+        ).join('\n');
+        
+        setHistory(prev => [...prev, {
+          type: 'output',
+          content: `
+╔══════════════════════════════════════╗
+║           VISITOR LOG                ║
+╠══════════════════════════════════════╣
+║  Total Visits: ${totalVisits.padEnd(22)}║
+║  First Visit:  ${firstDate.padEnd(22)}║
+║  Last Visit:   ${lastDate.padEnd(22)}║
+╚══════════════════════════════════════╝
+
+Recent Visits:
+─────────────────────────────
+${recentVisits || '  No visits recorded yet.'}
+─────────────────────────────
+`
+        }]);
+        break;
+        
       case 'hack':
         if (!isHacking) {
           setIsHacking(true);
@@ -260,6 +553,28 @@ Type 'github' to view source code.
           content: '[ROOT ACCESS GRANTED] Welcome, Administrator.'
         }]);
         break;
+      
+      case 'omega':
+        if (isUltraMode) {
+          // Full screen cinematic ACCESS GRANTED
+          setShowOmegaOverlay(true);
+          playSound('success');
+          
+          setTimeout(() => {
+            setShowOmegaOverlay(false);
+            setIsUltraMode(false);
+            setHistory(prev => [...prev, {
+              type: 'success',
+              content: '[OMEGA PROTOCOL COMPLETE] Returning to normal mode.'
+            }]);
+          }, 1500);
+        } else {
+          setHistory(prev => [...prev, {
+            type: 'error',
+            content: 'Access denied. Ultra Mode required.'
+          }]);
+        }
+        break;
         
       default:
         playSound('error');
@@ -268,11 +583,11 @@ Type 'github' to view source code.
           content: `Command not found: "${cmd}". Type 'help' for available commands.`
         }]);
     }
-  }, [isHacking, onClose]);
+  }, [isHacking, onClose, isUltraMode]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim()) {
+    if (input.trim() && !isRootAccess) {
       executeCommand(input);
       setInput('');
     }
@@ -286,42 +601,116 @@ Type 'github' to view source code.
   };
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          style={{ willChange: 'opacity' }}
         >
-          {/* Backdrop */}
+          {/* Backdrop with blur */}
           <motion.div
-            className="absolute inset-0 bg-black/90"
+            className="absolute inset-0 bg-black/70 backdrop-blur-md"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.12 }}
+            style={{ 
+              willChange: 'opacity',
+              WebkitBackdropFilter: 'blur(10px)',
+              backdropFilter: 'blur(10px)'
+            }}
           />
           
           {/* Terminal Window */}
           <motion.div
-            className="relative w-full max-w-4xl h-[80vh] bg-black border border-[#ff0040] rounded-lg overflow-hidden shadow-2xl"
-            initial={{ scale: 0.9, y: 50 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.9, y: 50 }}
-            style={{ boxShadow: '0 0 50px rgba(255, 0, 64, 0.3)' }}
+            className="relative w-[95vw] sm:w-full max-w-4xl h-[85dvh] sm:h-[80vh] max-h-[600px] bg-black/95 rounded-lg overflow-hidden"
+            initial={{ opacity: 0, scale: 0.985, y: 6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: 4 }}
+            transition={{ 
+              duration: 0.14, 
+              ease: [0.22, 1, 0.36, 1]
+            }}
+            style={{ 
+              willChange: 'transform, opacity',
+              border: `1px solid rgba(255, 0, 64, ${0.4 + glowIntensity * 0.6})`,
+              boxShadow: `0 0 ${40 + glowIntensity * 30}px rgba(255, 0, 64, ${0.15 + glowIntensity * 0.15}), 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(255, 0, 64, 0.03)`,
+              transition: 'box-shadow 150ms ease-out, border-color 150ms ease-out'
+            }}
           >
+            {/* Ultra Glitch Overlay */}
+            <AnimatePresence>
+              {showUltraGlitch && (
+                <motion.div
+                  className="absolute inset-0 z-50 pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                >
+                  <div className="absolute inset-0 bg-[#ff0040]/30 animate-pulse" />
+                  <div className="absolute inset-0" style={{ 
+                    background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,0,64,0.1) 2px, rgba(255,0,64,0.1) 4px)',
+                    animation: 'glitch-shift 0.1s infinite'
+                  }} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Omega Overlay */}
+            <AnimatePresence>
+              {showOmegaOverlay && (
+                <motion.div
+                  className="absolute inset-0 z-50 flex items-center justify-center bg-black/95"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <motion.div
+                    className="text-center"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <div 
+                      className="text-4xl sm:text-6xl font-bold text-green-400 font-['Orbitron'] mb-4"
+                      style={{ textShadow: '0 0 30px rgba(74, 222, 128, 0.8), 0 0 60px rgba(74, 222, 128, 0.5)' }}
+                    >
+                      ACCESS GRANTED
+                    </div>
+                    <div className="text-xl text-green-400/60 font-mono">
+                      OMEGA PROTOCOL COMPLETE
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            
             {/* Scanline effect */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden scanline opacity-20" />
             
-            {/* Terminal Header */}
-            <div className="flex items-center justify-between px-4 py-2 bg-[#1a0a0a] border-b border-[#ff0040]/50">
+            {/* Terminal Header - Long press for Ultra Mode on mobile */}
+            <div 
+              ref={headerRef}
+              className="flex items-center justify-between px-4 py-2 bg-[#1a0a0a] border-b border-[#ff0040]/50 select-none cursor-default"
+              onTouchStart={handleHeaderTouchStart}
+              onTouchEnd={handleHeaderTouchEnd}
+              onTouchCancel={handleHeaderTouchEnd}
+            >
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#ff0040]" />
-                <div className="w-3 h-3 rounded-full bg-[#ff0040]/50" />
-                <div className="w-3 h-3 rounded-full bg-[#ff0040]/30" />
+                <div className={`w-3 h-3 rounded-full ${isUltraMode ? 'bg-green-500 animate-pulse' : 'bg-[#ff0040]'}`} />
+                <div className={`w-3 h-3 rounded-full ${isUltraMode ? 'bg-green-500/50' : 'bg-[#ff0040]/50'}`} />
+                <div className={`w-3 h-3 rounded-full ${isUltraMode ? 'bg-green-500/30' : 'bg-[#ff0040]/30'}`} />
               </div>
-              <span className="text-[#ff0040] font-mono text-sm">nl@portfolio:~$</span>
+              <span className={`font-mono text-sm ${isUltraMode ? 'text-green-400' : 'text-[#ff0040]'}`}>
+                {isUltraMode ? 'nl@portfolio:~# [OMEGA]' : 'nl@portfolio:~$'}
+              </span>
               <button
                 onClick={onClose}
                 className="text-[#ff0040] hover:text-white transition-colors font-mono"
@@ -333,22 +722,28 @@ Type 'github' to view source code.
             {/* Terminal Content */}
             <div
               ref={terminalRef}
-              className="h-[calc(100%-100px)] overflow-y-auto p-4 font-mono text-sm"
+              className="h-[calc(100%-110px)] sm:h-[calc(100%-100px)] overflow-y-auto overflow-x-hidden p-3 sm:p-4 font-mono text-[11px] sm:text-sm"
               onClick={() => inputRef.current?.focus()}
             >
               {history.map((item, index) => (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -10 }}
+                  key={`${index}-${item.type}`}
+                  initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.1 }}
+                  transition={{ 
+                    duration: 0.08,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
                   className={`whitespace-pre-wrap mb-1 ${
                     item.type === 'input' ? 'text-white' :
-                    item.type === 'ascii' ? 'text-[#ff0040] neon-glow' :
+                    item.type === 'ascii' ? 'text-[#ff0040]' :
                     item.type === 'error' ? 'text-red-500' :
                     item.type === 'success' ? 'text-green-400' :
                     'text-gray-400'
                   }`}
+                  style={item.type === 'ascii' ? { 
+                    textShadow: '0 0 10px rgba(255, 0, 64, 0.5)' 
+                  } : undefined}
                 >
                   {item.content}
                 </motion.div>
@@ -372,12 +767,26 @@ Type 'github' to view source code.
                   </div>
                 </div>
               )}
+              
+              {/* Root Access Progress */}
+              {isRootAccess && (
+                <div className="mt-4">
+                  <div className="w-full h-2 bg-gray-900 rounded overflow-hidden">
+                    <motion.div
+                      className="h-full bg-green-500"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 1 }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Input Line */}
             <form
               onSubmit={handleSubmit}
-              className="absolute bottom-0 left-0 right-0 flex items-center px-4 py-3 bg-[#0a0a0a] border-t border-[#ff0040]/30"
+              className="absolute bottom-0 left-0 right-0 flex items-center px-3 sm:px-4 py-3 sm:py-3 bg-[#0a0a0a] border-t border-[#ff0040]/30 safe-area-bottom"
             >
               <span className="text-[#ff0040] mr-2">{'>'}</span>
               <input
@@ -389,12 +798,18 @@ Type 'github' to view source code.
                 className="flex-1 bg-transparent text-white font-mono outline-none"
                 placeholder="Enter command..."
                 autoFocus
-                disabled={isHacking}
+                disabled={isHacking || isRootAccess || isBooting}
               />
               <motion.span
                 className="w-2 h-5 bg-[#ff0040] ml-1"
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity }}
+                animate={{ opacity: [1, 1, 0, 0] }}
+                transition={{ 
+                  duration: 1, 
+                  repeat: Infinity,
+                  ease: 'linear',
+                  times: [0, 0.5, 0.5, 1]
+                }}
+                style={{ boxShadow: '0 0 8px rgba(255, 0, 64, 0.5)' }}
               />
             </form>
             

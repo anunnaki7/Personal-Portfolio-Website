@@ -4,13 +4,10 @@ interface PreloaderProps {
   onComplete: () => void;
 }
 
-// Status messages that change during loading
+// Status messages that change during loading (reduced for faster load)
 const statusMessages = [
-  'Initializing system...',
-  'Loading secure modules...',
-  'Authenticating user...',
-  'Decrypting data streams...',
-  'Establishing connection...',
+  'Initializing...',
+  'Loading modules...',
   'Access granted.',
 ];
 
@@ -22,14 +19,14 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   const [particles, setParticles] = useState<Array<{id: number; x: number; y: number; delay: number; duration: number}>>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Generate floating particles
+  // Generate floating particles (reduced for performance)
   useEffect(() => {
-    const newParticles = Array.from({ length: 30 }, (_, i) => ({
+    const newParticles = Array.from({ length: 15 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      delay: Math.random() * 5,
-      duration: 3 + Math.random() * 4,
+      delay: Math.random() * 2,
+      duration: 2 + Math.random() * 2,
     }));
     setParticles(newParticles);
   }, []);
@@ -87,10 +84,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     };
   }, []);
 
-  // Progress animation over 3 seconds
+  // Progress animation over 1.2 seconds (FAST)
   useEffect(() => {
-    const duration = 3000;
-    const interval = 30;
+    const duration = 1200;
+    const interval = 20;
     const increment = 100 / (duration / interval);
     
     const timer = setInterval(() => {
@@ -116,30 +113,47 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     setCurrentStatus(statusIndex);
   }, [progress]);
 
-  // Glitch effect every 2 seconds
+  // Glitch effect once during load
+  useEffect(() => {
+    const glitchTimeout = setTimeout(() => {
+      setGlitchActive(true);
+      setTimeout(() => setGlitchActive(false), 80);
+    }, 600);
+
+    return () => clearTimeout(glitchTimeout);
+  }, []);
+  
+  // Second glitch near end
+  useEffect(() => {
+    if (progress > 80 && progress < 90) {
+      setGlitchActive(true);
+      setTimeout(() => setGlitchActive(false), 50);
+    }
+  }, [progress]);
+
+  // Cleanup - placeholder for old interval
   useEffect(() => {
     const glitchInterval = setInterval(() => {
-      setGlitchActive(true);
-      setTimeout(() => setGlitchActive(false), 150);
-    }, 2000);
+      // Disabled for performance
+    }, 10000);
 
     return () => clearInterval(glitchInterval);
   }, []);
 
-  // Complete transition
+  // Complete transition (FAST)
   useEffect(() => {
     if (progress >= 100) {
       const fadeTimer = setTimeout(() => {
-        // Intense final glitch
+        // Quick final glitch
         setGlitchActive(true);
         setTimeout(() => {
           setGlitchActive(false);
           setIsFading(true);
           setTimeout(() => {
             onComplete();
-          }, 800);
-        }, 200);
-      }, 400);
+          }, 400);
+        }, 100);
+      }, 150);
 
       return () => clearTimeout(fadeTimer);
     }

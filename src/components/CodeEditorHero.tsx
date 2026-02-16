@@ -296,15 +296,14 @@ function BinaryBackground() {
 
 interface CodeEditorHeroProps {
   onLogoClick: () => void;
+  onUltraModeActivate: () => void;
 }
 
-export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
+export function CodeEditorHero({ onLogoClick, onUltraModeActivate }: CodeEditorHeroProps) {
   const [visibleLines, setVisibleLines] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [clickCount, setClickCount] = useState(0);
   const [glitchActive, setGlitchActive] = useState(false);
   const [showAccessGranted, setShowAccessGranted] = useState(false);
-  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Staggered line animation
   useEffect(() => {
@@ -331,29 +330,15 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
     return () => clearInterval(glitchInterval);
   }, []);
 
-  // Logo click handler
+  // Logo click handler - INSTANT SINGLE CLICK
   const handleLogoClick = () => {
     setGlitchActive(true);
     setTimeout(() => setGlitchActive(false), 200);
-    
-    setClickCount(prev => prev + 1);
-    
-    if (clickTimeoutRef.current) {
-      clearTimeout(clickTimeoutRef.current);
-    }
-    
-    clickTimeoutRef.current = setTimeout(() => {
-      setClickCount(0);
-    }, 2000);
-    
-    if (clickCount >= 4) {
-      onLogoClick();
-      setClickCount(0);
-    }
+    onLogoClick(); // Opens terminal IMMEDIATELY
   };
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 lg:py-4 lg:min-h-screen lg:h-auto">
+    <section id="home" className="relative min-h-[100dvh] flex items-center justify-center overflow-x-hidden overflow-y-auto py-8 px-4 sm:py-12 sm:px-6 md:py-16 md:px-8 lg:py-0 lg:px-8 lg:h-screen lg:min-h-[700px] lg:overflow-hidden" style={{ maxWidth: '100vw', boxSizing: 'border-box' }}>
       {/* Background layers */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a0000] via-[#0a0a0a] to-[#1a0000]" />
       <BinaryBackground />
@@ -389,10 +374,10 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
         }}
       />
 
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 z-10 max-w-5xl lg:max-w-4xl xl:max-w-5xl">
+      <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-8 z-10 w-full max-w-[calc(100vw-32px)] sm:max-w-[calc(100vw-48px)] md:max-w-2xl lg:max-w-3xl xl:max-w-4xl flex flex-col justify-center box-border">
         {/* Status bar - Hacker style */}
         <motion.div
-          className="flex items-center justify-center gap-4 mb-4 lg:mb-3 font-mono text-xs"
+          className="flex items-center justify-center gap-4 mb-3 lg:mb-2 font-mono text-xs"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -417,13 +402,31 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
           </span>
         </motion.div>
 
-        {/* N.L Logo */}
+        {/* N.L Logo with premium breathing glow */}
         <motion.div
-          className="flex justify-center mb-6 lg:mb-3"
+          className="flex justify-center mb-4 lg:mb-2 relative"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
+          {/* Soft radial red halo behind N.L - Ultra subtle */}
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            animate={{
+              opacity: [0.4, 0.6, 0.4],
+              scale: [1, 1.08, 1],
+            }}
+            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <div 
+              className="w-56 h-36 rounded-full"
+              style={{
+                background: 'radial-gradient(ellipse at center, rgba(255,0,64,0.2) 0%, rgba(255,0,64,0.05) 50%, transparent 70%)',
+                filter: 'blur(25px)',
+              }}
+            />
+          </motion.div>
+
           <motion.div
             onClick={handleLogoClick}
             className="cursor-pointer select-none relative group"
@@ -431,6 +434,15 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
             whileTap={{ scale: 0.95 }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            // Ultra subtle breathing glow animation (6-8s cycle)
+            animate={{
+              filter: [
+                'drop-shadow(0 0 20px rgba(255,0,64,0.5))',
+                'drop-shadow(0 0 35px rgba(255,0,64,0.7))',
+                'drop-shadow(0 0 20px rgba(255,0,64,0.5))',
+              ],
+            }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
             {/* Custom SVG Logo */}
             <svg 
@@ -533,7 +545,7 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
 
         {/* Code Editor Card */}
         <motion.div
-          className="max-w-4xl lg:max-w-3xl xl:max-w-4xl mx-auto relative"
+          className="w-full max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto relative box-border"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -542,12 +554,14 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
           <GlitchOverlay active={glitchActive} />
           
           <div 
-            className="relative rounded-xl overflow-hidden"
+            className="relative rounded-xl overflow-hidden mx-1 sm:mx-0"
             style={{
               background: 'linear-gradient(135deg, rgba(20,0,5,0.95) 0%, rgba(10,10,10,0.98) 100%)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(255,0,64,0.4)',
-              boxShadow: '0 0 60px rgba(255,0,64,0.2), inset 0 0 80px rgba(255,0,64,0.03)',
+              boxShadow: '0 0 40px rgba(255,0,64,0.15), inset 0 0 60px rgba(255,0,64,0.02)',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
             }}
           >
             {/* Matrix rain inside card */}
@@ -557,60 +571,60 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
             <ScanLine />
             
             {/* Editor Header */}
-            <div className="relative z-10 flex items-center justify-between px-4 py-3 bg-[#0a0a0a]/90 border-b border-[#ff0040]/30">
-              {/* macOS circles */}
-              <div className="flex items-center gap-2">
+            <div className="relative z-10 flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 bg-[#0a0a0a]/90 border-b border-[#ff0040]/30">
+              {/* macOS circles - smaller on mobile */}
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <motion.div 
-                  className="w-3 h-3 rounded-full bg-[#ff5f57] cursor-pointer"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#ff5f57] cursor-pointer"
                   whileHover={{ scale: 1.3, boxShadow: '0 0 10px #ff5f57' }}
                 />
                 <motion.div 
-                  className="w-3 h-3 rounded-full bg-[#febc2e] cursor-pointer"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#febc2e] cursor-pointer"
                   whileHover={{ scale: 1.3, boxShadow: '0 0 10px #febc2e' }}
                 />
                 <motion.div 
-                  className="w-3 h-3 rounded-full bg-[#28c840] cursor-pointer"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#28c840] cursor-pointer"
                   whileHover={{ scale: 1.3, boxShadow: '0 0 10px #28c840' }}
                 />
               </div>
               
-              {/* File name with typing effect */}
-              <div className="flex items-center gap-2">
+              {/* File name */}
+              <div className="flex items-center gap-1 sm:gap-2">
                 <motion.span 
-                  className="text-[#ff0040]/80"
+                  className="text-[#ff0040]/80 text-xs sm:text-base"
                   animate={{ opacity: [1, 0.5, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   ▶
                 </motion.span>
-                <span 
-                  className="font-mono text-sm font-bold text-[#ff0040] tracking-wider"
+                <motion.span 
+                  className="font-mono text-xs sm:text-sm font-bold text-[#ff0040] tracking-wider cursor-pointer hover:text-[#ff3366] transition-colors duration-200"
                   style={{ textShadow: '0 0 15px rgba(255,0,64,0.6)' }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Trigger Ultra Mode immediately
+                    onUltraModeActivate();
+                  }}
+                  whileHover={{ scale: 1.05, textShadow: '0 0 25px rgba(255,0,64,0.9)' }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   Portfolio.ts
-                </span>
-                <motion.span
-                  className="text-cyan-400 text-xs"
-                  animate={{ opacity: [0, 1, 0] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  [EXECUTING]
                 </motion.span>
               </div>
               
-              {/* Terminal icons */}
-              <div className="flex items-center gap-3 text-gray-500 text-xs font-mono">
+              {/* Terminal icons - Hidden on mobile to prevent overflow */}
+              <div className="hidden md:flex items-center gap-3 text-gray-500 text-xs font-mono">
                 <span>UTF-8</span>
                 <span className="text-[#ff0040]">TS</span>
               </div>
             </div>
 
             {/* Code Content */}
-            <div className="relative z-10 p-4 md:p-5 lg:p-4 font-['Fira_Code','JetBrains_Mono',monospace] text-sm md:text-base lg:text-[14px] overflow-x-auto">
+            <div className="relative z-10 p-2 sm:p-4 md:p-5 lg:p-4 font-['Fira_Code','JetBrains_Mono',monospace] text-[9px] sm:text-xs md:text-sm lg:text-[14px] overflow-x-auto max-w-full">
               {codeLines.map((line, index) => (
                 <motion.div
                   key={line.num}
-                  className="flex items-start gap-4 leading-6 md:leading-7 lg:leading-6 group"
+                  className="flex items-start gap-2 sm:gap-4 leading-5 sm:leading-6 md:leading-7 lg:leading-6 group"
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ 
                     opacity: index < visibleLines ? 1 : 0,
@@ -656,16 +670,16 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
               )}
             </div>
 
-            {/* Access Granted overlay */}
+            {/* Compilation Successful overlay */}
             {showAccessGranted && (
               <motion.div
-                className="absolute bottom-4 right-4 z-20"
+                className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 z-20"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <div 
-                  className="px-4 py-2 bg-black/80 border border-green-500/50 rounded font-mono text-xs text-green-400"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-black/90 border border-green-500/50 rounded font-mono text-[10px] sm:text-xs text-green-400"
                   style={{ textShadow: '0 0 10px rgba(0,255,0,0.5)' }}
                 >
                   <motion.span
@@ -701,15 +715,15 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center mt-8 lg:mt-4"
+          className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center mt-4 sm:mt-6 lg:mt-4 px-2 sm:px-0"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: visibleLines >= codeLines.length ? 1 : 0, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
         >
           <motion.a
             href="#projects"
-            className="group relative px-6 py-3 lg:px-8 lg:py-3 bg-[#ff0040] text-black font-bold font-['Orbitron'] rounded-lg overflow-hidden
-              border-2 border-[#ff0040] transition-all duration-300 text-center text-sm lg:text-base"
+            className="group relative px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-3 bg-[#ff0040] text-black font-bold font-['Orbitron'] rounded-lg overflow-hidden
+              border-2 border-[#ff0040] transition-all duration-300 text-center text-xs sm:text-sm lg:text-base"
             whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(255, 0, 64, 0.6)' }}
             whileTap={{ scale: 0.95 }}
           >
@@ -731,8 +745,8 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
           
           <motion.a
             href="#contact"
-            className="group relative px-6 py-3 lg:px-8 lg:py-3 border-2 border-[#ff0040] text-[#ff0040] font-bold font-['Orbitron'] rounded-lg
-              hover:bg-[#ff0040] hover:text-black transition-all duration-300 text-center overflow-hidden text-sm lg:text-base"
+            className="group relative px-4 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-3 border-2 border-[#ff0040] text-[#ff0040] font-bold font-['Orbitron'] rounded-lg
+              hover:bg-[#ff0040] hover:text-black transition-all duration-300 text-center overflow-hidden text-xs sm:text-sm lg:text-base"
             whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(255, 0, 64, 0.5)' }}
             whileTap={{ scale: 0.95 }}
           >
@@ -740,9 +754,24 @@ export function CodeEditorHero({ onLogoClick }: CodeEditorHeroProps) {
           </motion.a>
         </motion.div>
 
+        {/* Founder detail - subtle terminal style line */}
+        <motion.div
+          className="flex justify-center mt-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: visibleLines >= codeLines.length ? 1 : 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+        >
+          <span 
+            className="font-mono text-[11px] md:text-xs text-gray-500/60 tracking-wider"
+            style={{ fontFamily: "'Fira Code', 'JetBrains Mono', monospace" }}
+          >
+            <span className="text-[#ff0040]/50">{'>'}</span> building bold web experiences since 2026
+          </span>
+        </motion.div>
+
         {/* Scroll indicator - positioned below buttons with clear separation */}
         <motion.div
-          className="relative z-20 flex justify-center mt-8 lg:mt-6"
+          className="relative z-20 flex justify-center mt-6 lg:mt-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: visibleLines >= codeLines.length ? 1 : 0 }}
           transition={{ delay: 1, duration: 0.6 }}

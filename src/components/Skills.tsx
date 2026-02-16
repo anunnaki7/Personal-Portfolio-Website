@@ -287,10 +287,10 @@ export function Skills() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="skills" className="py-20 relative z-10">
+    <section id="skills" className="py-16 md:py-20 lg:py-24 relative z-10">
       <div className="container mx-auto px-6" ref={ref}>
         {/* Section Title */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-12 lg:mb-16">
           <motion.h2
             className="text-4xl md:text-5xl font-bold font-['Orbitron'] mb-4"
             initial={{ opacity: 0, y: 20 }}

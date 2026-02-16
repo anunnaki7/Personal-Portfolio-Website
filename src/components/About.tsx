@@ -7,8 +7,8 @@ export function About() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" className="py-20 relative z-10">
-      <div className="container mx-auto px-6">
+    <section id="about" className="py-12 sm:py-16 md:py-20 lg:py-24 relative z-10 overflow-x-hidden">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 50 }}
@@ -16,7 +16,7 @@ export function About() {
           transition={{ duration: 0.8 }}
         >
           {/* Section Title */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 md:mb-12 lg:mb-16">
             <motion.h2
               className="text-4xl md:text-5xl font-bold font-['Orbitron'] mb-4"
               initial={{ opacity: 0, y: 20 }}
@@ -32,7 +32,7 @@ export function About() {
 
           {/* About Card */}
           <motion.div
-            className="max-w-4xl mx-auto glass-card rounded-2xl p-8 md:p-12 neon-border"
+            className="max-w-4xl mx-auto glass-card rounded-2xl p-5 sm:p-8 md:p-12 neon-border"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ delay: 0.4, duration: 0.6 }}
@@ -48,15 +48,15 @@ export function About() {
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div className="w-48 h-48 rounded-full border-4 border-[#ff0040] flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] glow-box">
-                  <span className="text-6xl font-bold font-['Orbitron'] text-[#ff0040]">NL</span>
+                <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full border-4 border-[#ff0040] flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] glow-box">
+                  <span className="text-4xl sm:text-5xl md:text-6xl font-bold font-['Orbitron'] text-[#ff0040]">NL</span>
                 </div>
               </motion.div>
 
               {/* Bio Content */}
               <div className="md:col-span-2 space-y-6">
                 <motion.p
-                  className="text-gray-300 text-lg leading-relaxed"
+                  className="text-gray-300 text-base sm:text-lg leading-relaxed"
                   initial={{ opacity: 0, x: 20 }}
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.5 }}
@@ -72,11 +72,11 @@ export function About() {
                   transition={{ delay: 0.8 }}
                 >
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-[#ff0040] neon-glow">1+</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-[#ff0040] neon-glow">1+</div>
                     <div className="text-sm text-gray-500">Years Exp</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-[#ff0040] neon-glow">2+</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-[#ff0040] neon-glow">2+</div>
                     <div className="text-sm text-gray-500">Projects</div>
                   </div>
                   <div className="text-center">

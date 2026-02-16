@@ -1,0 +1,145 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Neon glow filter -->
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur1"/>
+      <feGaussianBlur stdDeviation="16" result="blur2"/>
+      <feGaussianBlur stdDeviation="32" result="blur3"/>
+      <feMerge>
+        <feMergeNode in="blur3"/>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Text glow -->
+    <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Radial gradient for center glow -->
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff0040" stop-opacity="0.3"/>
+      <stop offset="40%" stop-color="#ff0040" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#ff0040" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Pure black background -->
+  <rect width="1200" height="630" fill="#000000"/>
+  
+  <!-- Subtle red grid -->
+  <g opacity="0.15">
+    <!-- Vertical lines -->
+    <line x1="100" y1="0" x2="100" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="200" y1="0" x2="200" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="300" y1="0" x2="300" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="400" y1="0" x2="400" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="500" y1="0" x2="500" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="700" y1="0" x2="700" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="800" y1="0" x2="800" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="900" y1="0" x2="900" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="1000" y1="0" x2="1000" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="1100" y1="0" x2="1100" y2="630" stroke="#ff0040" stroke-width="0.5"/>
+    <!-- Horizontal lines -->
+    <line x1="0" y1="63" x2="1200" y2="63" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="0" y1="126" x2="1200" y2="126" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="0" y1="189" x2="1200" y2="189" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="0" y1="252" x2="1200" y2="252" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="0" y1="315" x2="1200" y2="315" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="0" y1="378" x2="1200" y2="378" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="0" y1="441" x2="1200" y2="441" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="0" y1="504" x2="1200" y2="504" stroke="#ff0040" stroke-width="0.5"/>
+    <line x1="0" y1="567" x2="1200" y2="567" stroke="#ff0040" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Center neon glow -->
+  <ellipse cx="600" cy="280" rx="400" ry="250" fill="url(#centerGlow)"/>
+  
+  <!-- Large N.L with neon glow -->
+  <text 
+    x="600" 
+    y="280" 
+    font-family="Arial Black, sans-serif" 
+    font-size="180" 
+    font-weight="900" 
+    fill="#ff0040" 
+    text-anchor="middle" 
+    dominant-baseline="middle"
+    filter="url(#neonGlow)"
+  >N.L</text>
+  
+  <!-- Subtitle: Nikola Lutovac -->
+  <text 
+    x="600" 
+    y="380" 
+    font-family="Arial, sans-serif" 
+    font-size="36" 
+    font-weight="bold" 
+    fill="#ffffff" 
+    text-anchor="middle"
+    filter="url(#textGlow)"
+  >Nikola Lutovac</text>
+  
+  <!-- Tagline: Vibe Coding Developer -->
+  <text 
+    x="600" 
+    y="430" 
+    font-family="'Courier New', monospace" 
+    font-size="24" 
+    fill="#ff0040" 
+    text-anchor="middle"
+    opacity="0.9"
+    filter="url(#textGlow)"
+  >Vibe Coding Developer</text>
+  
+  <!-- Terminal text bottom left -->
+  <g opacity="0.5">
+    <text 
+      x="40" 
+      y="570" 
+      font-family="'Courier New', monospace" 
+      font-size="14" 
+      fill="#ff0040"
+    >&gt; portfolio.execute()</text>
+    <text 
+      x="40" 
+      y="595" 
+      font-family="'Courier New', monospace" 
+      font-size="14" 
+      fill="#00ff00"
+    >&gt; status: online</text>
+  </g>
+  
+  <!-- Terminal text bottom right -->
+  <g opacity="0.4">
+    <text 
+      x="1160" 
+      y="595" 
+      font-family="'Courier New', monospace" 
+      font-size="12" 
+      fill="#666666"
+      text-anchor="end"
+    >nikolalutovac-portfolio.vercel.app</text>
+  </g>
+  
+  <!-- Corner accents -->
+  <path d="M20,20 L20,60 M20,20 L60,20" stroke="#ff0040" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M1180,20 L1180,60 M1180,20 L1140,20" stroke="#ff0040" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M20,610 L20,570 M20,610 L60,610" stroke="#ff0040" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M1180,610 L1180,570 M1180,610 L1140,610" stroke="#ff0040" stroke-width="2" fill="none" opacity="0.6"/>
+  
+  <!-- Scan line effect -->
+  <rect x="0" y="0" width="1200" height="630" fill="url(#scanlines)" opacity="0.03"/>
+  
+  <!-- Glitch slices (subtle) -->
+  <rect x="0" y="200" width="1200" height="2" fill="#00ffff" opacity="0.1"/>
+  <rect x="0" y="420" width="1200" height="1" fill="#ff0040" opacity="0.15"/>
+</svg>

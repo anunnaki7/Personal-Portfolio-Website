@@ -214,8 +214,8 @@ function ProjectCard({ project, index }: ProjectCardProps) {
                 onLoad={() => setImageLoaded(true)}
                 onError={handleImageError}
                 animate={{ 
-                  scale: isHovered ? 1.05 : 1,
-                  filter: isHovered ? 'brightness(1) contrast(1.1)' : 'brightness(0.9) contrast(1.05)',
+                  scale: isHovered ? 1.08 : 1,
+                  filter: isHovered ? 'brightness(1.05) contrast(1.1) saturate(1.1)' : 'brightness(0.95) contrast(1.05)',
                 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               />

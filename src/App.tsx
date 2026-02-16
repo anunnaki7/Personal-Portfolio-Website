@@ -12,12 +12,59 @@ import { EasterEgg } from './components/EasterEgg';
 import { BackToTop } from './components/BackToTop';
 import Preloader from './components/Preloader';
 
+// Visitor tracking - record each visit
+const recordVisit = () => {
+  const now = new Date();
+  const visit = {
+    id: Date.now(),
+    date: now.toLocaleDateString('en-GB', { 
+      weekday: 'short', 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    }),
+    time: now.toLocaleTimeString('en-GB', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    }),
+    timestamp: now.getTime(),
+    device: /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+    screen: `${window.innerWidth}x${window.innerHeight}`,
+  };
+  
+  // Get existing visits
+  const visits = JSON.parse(localStorage.getItem('nl_visits') || '[]');
+  
+  // Add new visit (keep last 100)
+  const updated = [visit, ...visits].slice(0, 100);
+  localStorage.setItem('nl_visits', JSON.stringify(updated));
+  
+  // Update total count
+  const total = parseInt(localStorage.getItem('nl_total_visits') || '0') + 1;
+  localStorage.setItem('nl_total_visits', total.toString());
+  
+  // Save first visit
+  if (!localStorage.getItem('nl_first_visit')) {
+    localStorage.setItem('nl_first_visit', now.toISOString());
+  }
+  
+  // Save last visit
+  localStorage.setItem('nl_last_visit', now.toISOString());
+  
+  console.log(`[VISITOR LOG] Visit #${total} recorded at ${visit.time} on ${visit.date}`);
+};
+
 export function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const [secretInput, setSecretInput] = useState('');
-  const [logoClickCount, setLogoClickCount] = useState(0);
-  const [logoClickTimer, setLogoClickTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+
+  // Record visit on first load
+  useEffect(() => {
+    recordVisit();
+  }, []);
+  const [startInUltraMode, setStartInUltraMode] = useState(false);
 
   // Handle keyboard shortcuts and secret commands
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -52,26 +99,17 @@ export function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  // Logo click handler - 5 clicks triggers Easter Egg, single clicks for terminal still work via CodeEditorHero
+  // Logo click handler - OPENS TERMINAL IMMEDIATELY
   const handleLogoClick = () => {
-    const newCount = logoClickCount + 1;
-    setLogoClickCount(newCount);
+    // Open terminal IMMEDIATELY on single click
+    setStartInUltraMode(false);
+    setIsTerminalOpen(true);
+  };
 
-    if (logoClickTimer) clearTimeout(logoClickTimer);
-
-    const timer = setTimeout(() => {
-      setLogoClickCount(0);
-    }, 2000);
-    setLogoClickTimer(timer);
-
-    // 5 clicks → Easter Egg
-    if (newCount >= 5) {
-      setLogoClickCount(0);
-      if (logoClickTimer) clearTimeout(logoClickTimer);
-      // Trigger easter egg
-      const trigger = (window as unknown as Record<string, (() => void) | undefined>).__easterEggTrigger;
-      if (trigger) trigger();
-    }
+  // Logo LONG PRESS handler - Opens terminal in ULTRA MODE
+  const handleUltraModeActivate = () => {
+    setStartInUltraMode(true);
+    setIsTerminalOpen(true);
   };
 
   return (
@@ -93,10 +131,10 @@ export function App() {
         
         {/* Content */}
         <div className="relative z-10">
-          <Navbar onLogoClick={handleLogoClick} />
+          <Navbar onLogoClick={handleLogoClick} onUltraModeActivate={handleUltraModeActivate} />
           
           <main>
-            <CodeEditorHero onLogoClick={handleLogoClick} />
+            <CodeEditorHero onLogoClick={handleLogoClick} onUltraModeActivate={handleUltraModeActivate} />
             <About />
             <Skills />
             <Projects />
@@ -107,7 +145,7 @@ export function App() {
         </div>
 
         {/* Secret Terminal */}
-        <Terminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
+        <Terminal isOpen={isTerminalOpen} onClose={() => { setIsTerminalOpen(false); setStartInUltraMode(false); }} startInUltraMode={startInUltraMode} />
 
         {/* Easter Egg Overlay */}
         <EasterEgg />
