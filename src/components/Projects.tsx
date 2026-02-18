@@ -21,6 +21,22 @@ const projects = [
   },
   {
     id: 2,
+    title: 'Master Perionica',
+    description: 'Professional laundry service website for Master Perionica. Features modern design, service showcase, pricing information, and easy contact options for customers seeking quality laundry and dry cleaning services.',
+    tech: ['REACT', 'TYPESCRIPT', 'TAILWIND', 'VITE'],
+    image: 'https://image.thum.io/get/width/1280/crop/720/https://master-perionica.vercel.app',
+    fallbackImages: [
+      'https://master-perionica.vercel.app/og-image.png',
+      'https://master-perionica.vercel.app/images/hero.jpg',
+    ],
+    liveUrl: 'https://master-perionica.vercel.app/',
+    githubUrl: 'https://github.com/anunnaki7/Master-Perionica',
+    featured: false,
+    hasRealImage: true,
+    status: 'DEPLOYED',
+  },
+  {
+    id: 3,
     title: 'CryptoTracker Pro',
     description: 'Real-time cryptocurrency tracking dashboard with advanced charts, portfolio management, and price alerts.',
     tech: ['NEXT.JS', 'TYPESCRIPT', 'CHART.JS', 'API'],
@@ -31,7 +47,7 @@ const projects = [
     status: 'IN_DEV',
   },
   {
-    id: 3,
+    id: 4,
     title: 'TaskFlow',
     description: 'A sleek project management application with drag-and-drop kanban boards, team collaboration, and real-time updates.',
     tech: ['REACT', 'REDUX', 'SOCKET.IO', 'POSTGRESQL'],
@@ -42,7 +58,7 @@ const projects = [
     status: 'IN_DEV',
   },
   {
-    id: 4,
+    id: 5,
     title: 'DevPortfolio Builder',
     description: 'An open-source tool for developers to create stunning portfolio websites with customizable themes and components.',
     tech: ['TYPESCRIPT', 'REACT', 'TAILWIND', 'MDX'],
@@ -61,6 +77,25 @@ interface ProjectCardProps {
 
 // Project icons for non-image projects (SVG based)
 const projectIcons: Record<string, React.ReactNode> = {
+  'Master Perionica': (
+    <svg className="w-24 h-24" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.5">
+      {/* Washing machine body */}
+      <rect x="8" y="8" width="48" height="48" rx="4" strokeWidth="2"/>
+      {/* Door circle */}
+      <circle cx="32" cy="36" r="16" strokeWidth="2"/>
+      {/* Inner drum */}
+      <circle cx="32" cy="36" r="10" strokeWidth="1.5" strokeDasharray="4 2"/>
+      {/* Water/clothes inside */}
+      <path d="M26 33c2-3 4-2 6 0s4 3 6 0" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M26 39c2-3 4-2 6 0s4 3 6 0" strokeWidth="2" strokeLinecap="round"/>
+      {/* Control panel */}
+      <line x1="12" y1="18" x2="52" y2="18" strokeWidth="1.5"/>
+      {/* Buttons */}
+      <circle cx="18" cy="13" r="2" fill="currentColor"/>
+      <circle cx="26" cy="13" r="2" fill="currentColor"/>
+      <rect x="40" y="11" width="8" height="4" rx="1" fill="currentColor"/>
+    </svg>
+  ),
   'CryptoTracker Pro': (
     <svg className="w-20 h-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
       <path d="M3 3v18h18" strokeLinecap="round" strokeLinejoin="round"/>
@@ -106,15 +141,30 @@ function ProjectCard({ project, index }: ProjectCardProps) {
     }
   }, [isHovered]);
 
-  const imageUrls = project.hasRealImage ? [
-    `https://api.microlink.io/?url=${encodeURIComponent('https://monte-kl.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720`,
-    'https://monte-kl.vercel.app/og-image.png',
-    'https://monte-kl.vercel.app/og-image.jpg',
-    'https://monte-kl.vercel.app/images/hero.jpg',
-    'https://monte-kl.vercel.app/images/hero.png',
-    'https://monte-kl.vercel.app/hero.jpg',
-    `https://image.thum.io/get/width/1280/crop/720/https://monte-kl.vercel.app`,
-  ] : [];
+  const getImageUrls = () => {
+    if (project.title === 'Monte Quad Kolašin') {
+      return [
+        `https://api.microlink.io/?url=${encodeURIComponent('https://monte-kl.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720`,
+        `https://image.thum.io/get/width/1280/crop/720/https://monte-kl.vercel.app`,
+        'https://monte-kl.vercel.app/og-image.png',
+      ];
+    }
+    if (project.title === 'Master Perionica') {
+      return [
+        // Primary: s.wordpress.com screenshot service (very reliable)
+        `https://s.wordpress.com/mshots/v1/https://master-perionica.vercel.app?w=1280&h=720`,
+        // Backup 1: thumbnail.ws 
+        `https://api.thumbnail.ws/api/ab38f32e0c0c56e9f50c14f6e6ad2a6f4e91c2f1d5e1/thumbnail/get?url=https://master-perionica.vercel.app&width=1280`,
+        // Backup 2: microlink with longer wait
+        `https://api.microlink.io/?url=${encodeURIComponent('https://master-perionica.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=5000`,
+        // Backup 3: pagepeeker
+        `https://api.pagepeeker.com/v2/thumbs.php?size=x&url=https://master-perionica.vercel.app`,
+      ];
+    }
+    return [];
+  };
+
+  const imageUrls = getImageUrls();
 
   const handleImageError = () => {
     if (currentImageIndex < imageUrls.length - 1) {
@@ -286,7 +336,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/btn relative px-6 py-3 font-bold font-['Orbitron'] text-sm rounded-lg overflow-hidden
+                className="group/btn relative px-6 py-3 font-bold text-sm rounded-lg overflow-hidden
                   border-2 border-[#ff0040] text-[#ff0040] hover:text-white transition-colors duration-300"
                 whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(255,0,64,0.5)' }}
                 whileTap={{ scale: 0.95 }}
@@ -313,7 +363,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group/btn relative px-6 py-3 font-bold font-['Orbitron'] text-sm rounded-lg
+                  className="group/btn relative px-6 py-3 font-bold text-sm rounded-lg
                     bg-black/50 border border-[#ff0040]/50 text-gray-300 hover:text-white hover:border-[#ff0040] transition-all duration-300"
                   whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(255,0,64,0.3)' }}
                   whileTap={{ scale: 0.95 }}
@@ -339,7 +389,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               transition={{ delay: 0.3 }}
             >
               <motion.div 
-                className="relative px-3 py-1.5 font-['Orbitron'] text-[10px] font-bold tracking-wider"
+                className="relative px-3 py-1.5 text-[10px] font-bold tracking-wider"
                 style={{
                   background: 'linear-gradient(135deg, rgba(255,0,64,0.9) 0%, rgba(200,0,50,0.9) 100%)',
                   border: '1px solid rgba(255,100,100,0.5)',
@@ -408,7 +458,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
           
           {/* Project title */}
           <motion.h3 
-            className="text-xl md:text-2xl font-bold text-white mb-2 font-['Orbitron'] transition-colors duration-300"
+            className="text-xl md:text-2xl font-bold text-white mb-2 transition-colors duration-300"
             animate={{ color: isHovered ? '#ff0040' : '#ffffff' }}
           >
             <span className="text-[#ff0040]/50 mr-2">//</span>
@@ -445,7 +495,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="group/cta relative flex items-center justify-center gap-3 w-full md:w-auto md:inline-flex
-                px-6 py-3 font-['Orbitron'] font-bold text-sm rounded-lg overflow-hidden
+                px-6 py-3 font-bold text-sm rounded-lg overflow-hidden
                 border-2 border-[#ff0040] text-white transition-all duration-300"
               style={{
                 background: 'linear-gradient(135deg, rgba(255,0,64,0.2) 0%, rgba(255,0,64,0.1) 100%)',
@@ -521,7 +571,7 @@ export function Projects() {
           </motion.div>
           
           <motion.h2
-            className="text-3xl md:text-4xl lg:text-5xl font-bold font-['Orbitron'] mb-4"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2 }}
@@ -570,7 +620,7 @@ export function Projects() {
             href="https://github.com/anunnaki7?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex items-center gap-3 px-8 py-3.5 font-['Orbitron'] font-bold text-sm
+            className="group relative inline-flex items-center gap-3 px-8 py-3.5 font-bold text-sm
               border border-[#ff0040]/50 text-[#ff0040] rounded-lg overflow-hidden
               hover:border-[#ff0040] transition-all duration-300"
             style={{
