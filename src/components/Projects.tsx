@@ -24,10 +24,11 @@ const projects = [
     title: 'Master Perionica',
     description: 'Professional laundry service website for Master Perionica. Features modern design, service showcase, pricing information, and easy contact options for customers seeking quality laundry and dry cleaning services.',
     tech: ['REACT', 'TYPESCRIPT', 'TAILWIND', 'VITE'],
-    image: 'https://image.thum.io/get/width/1280/crop/720/https://master-perionica.vercel.app',
+    image: 'https://api.microlink.io/?url=https%3A%2F%2Fmaster-perionica.vercel.app&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=3000',
     fallbackImages: [
+      'https://s.wordpress.com/mshots/v1/https%3A%2F%2Fmaster-perionica.vercel.app?w=1280&h=720',
+      'https://image.thum.io/get/width/1280/crop/720/https://master-perionica.vercel.app',
       'https://master-perionica.vercel.app/og-image.png',
-      'https://master-perionica.vercel.app/images/hero.jpg',
     ],
     liveUrl: 'https://master-perionica.vercel.app/',
     githubUrl: 'https://github.com/anunnaki7/Master-Perionica',
@@ -37,37 +38,22 @@ const projects = [
   },
   {
     id: 3,
-    title: 'CryptoTracker Pro',
-    description: 'Real-time cryptocurrency tracking dashboard with advanced charts, portfolio management, and price alerts.',
-    tech: ['NEXT.JS', 'TYPESCRIPT', 'CHART.JS', 'API'],
-    image: '',
-    liveUrl: '#',
-    githubUrl: '#',
-    hasRealImage: false,
-    status: 'IN_DEV',
+    title: 'Villa Villekulla',
+    description: 'A beautiful and elegant villa rental website for Villa Villekulla. Features a stunning visual design, property showcase, amenities overview, and seamless booking experience for guests looking for a premium holiday stay.',
+    tech: ['REACT', 'TYPESCRIPT', 'TAILWIND', 'VITE'],
+    image: 'https://api.microlink.io/?url=https://villavillekulla.vercel.app&screenshot=true&meta=false&embed=screenshot.url',
+    fallbackImages: [
+      'https://image.thum.io/get/width/1280/crop/720/https://villavillekulla.vercel.app',
+      'https://s.wordpress.com/mshots/v1/https://villavillekulla.vercel.app?w=1280&h=720',
+      'https://villavillekulla.vercel.app/og-image.png',
+    ],
+    liveUrl: 'https://villavillekulla.vercel.app/',
+    githubUrl: 'https://github.com/anunnaki7/VillaVilleKulla',
+    featured: false,
+    hasRealImage: true,
+    status: 'DEPLOYED',
   },
-  {
-    id: 4,
-    title: 'TaskFlow',
-    description: 'A sleek project management application with drag-and-drop kanban boards, team collaboration, and real-time updates.',
-    tech: ['REACT', 'REDUX', 'SOCKET.IO', 'POSTGRESQL'],
-    image: '',
-    liveUrl: '#',
-    githubUrl: '#',
-    hasRealImage: false,
-    status: 'IN_DEV',
-  },
-  {
-    id: 5,
-    title: 'DevPortfolio Builder',
-    description: 'An open-source tool for developers to create stunning portfolio websites with customizable themes and components.',
-    tech: ['TYPESCRIPT', 'REACT', 'TAILWIND', 'MDX'],
-    image: '',
-    liveUrl: '#',
-    githubUrl: '#',
-    hasRealImage: false,
-    status: 'PLANNED',
-  },
+
 ];
 
 interface ProjectCardProps {
@@ -151,14 +137,19 @@ function ProjectCard({ project, index }: ProjectCardProps) {
     }
     if (project.title === 'Master Perionica') {
       return [
-        // Primary: s.wordpress.com screenshot service (very reliable)
-        `https://s.wordpress.com/mshots/v1/https://master-perionica.vercel.app?w=1280&h=720`,
-        // Backup 1: thumbnail.ws 
-        `https://api.thumbnail.ws/api/ab38f32e0c0c56e9f50c14f6e6ad2a6f4e91c2f1d5e1/thumbnail/get?url=https://master-perionica.vercel.app&width=1280`,
-        // Backup 2: microlink with longer wait
-        `https://api.microlink.io/?url=${encodeURIComponent('https://master-perionica.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=5000`,
-        // Backup 3: pagepeeker
-        `https://api.pagepeeker.com/v2/thumbs.php?size=x&url=https://master-perionica.vercel.app`,
+        `https://api.microlink.io/?url=${encodeURIComponent('https://master-perionica.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=3000`,
+        `https://s.wordpress.com/mshots/v1/${encodeURIComponent('https://master-perionica.vercel.app')}?w=1280&h=720`,
+        `https://image.thum.io/get/width/1280/crop/720/https://master-perionica.vercel.app`,
+        `https://master-perionica.vercel.app/og-image.png`,
+      ];
+    }
+    if (project.title === 'Villa Villekulla') {
+      return [
+        `https://api.microlink.io/?url=${encodeURIComponent('https://villavillekulla.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=4000`,
+        `https://image.thum.io/get/width/1280/crop/720/noanimate/https://villavillekulla.vercel.app`,
+        `https://s.wordpress.com/mshots/v1/https://villavillekulla.vercel.app?w=1280&h=720`,
+        `https://api.microlink.io/?url=${encodeURIComponent('https://villavillekulla.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&waitForTimeout=6000`,
+        'https://villavillekulla.vercel.app/og-image.png',
       ];
     }
     return [];
@@ -269,8 +260,9 @@ function ProjectCard({ project, index }: ProjectCardProps) {
                 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
               />
-              {/* Gradient overlays - reduced opacity for better image visibility */}
+              {/* Gradient overlays */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+
               <motion.div 
                 className="absolute inset-0 bg-gradient-to-br from-transparent to-[#ff0040]/10"
                 animate={{ opacity: isHovered ? 1 : 0 }}
@@ -380,7 +372,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             </motion.div>
           </motion.div>
 
-          {/* Featured badge - Hacker style */}
+          {/* Featured badge */}
           {project.featured && (
             <motion.div 
               className="absolute top-4 right-4 z-30"
@@ -470,7 +462,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             {project.description}
           </p>
           
-          {/* Tech Stack - System tags style */}
+          {/* Tech Stack */}
           <div className="flex flex-wrap gap-2 mb-5">
             {project.tech.map((tech, i) => (
               <motion.span
