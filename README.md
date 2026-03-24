@@ -43,11 +43,11 @@ The website is designed to be clean, modern, and fully responsive for all device
 ## 🚀 Getting Started
 
 ### Clone the repository
+
 ```bash
-git clone https://github.com/anunnaki7/Personal-Portfolio-Website.git
-### Clone the repository
-```bash
-git clone https://github.com/anunnaki7/Personal-Portfolio-Website.git
+git clone [https://github.com/anunnaki7/Personal-Portfolio-Website](https://github.com/anunnaki7/Personal-Portfolio-Website)
+cd Personal-Portfolio-Website
+
 
 Enter project folder
 cd Personal-Portfolio-Website
