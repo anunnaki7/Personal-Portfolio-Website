@@ -4,13 +4,13 @@ import { useRef, useState, useEffect } from 'react';
 const projects = [
   {
     id: 1,
-    title: 'Monte Quad Kolašin',
+    title: 'MonteQuad&Buggy tour Kolašin',
     description: 'A modern website for quad bike tours in the beautiful mountains of Kolašin, Montenegro. Features stunning visuals, tour information, and seamless user experience showcasing the breathtaking Montenegrin landscape.',
     tech: ['REACT', 'TYPESCRIPT', 'TAILWIND', 'VITE'],
-    image: 'https://api.microlink.io/?url=https://monte-kl.vercel.app&screenshot=true&meta=false&embed=screenshot.url',
+    image: 'https://api.microlink.io/?url=https%3A%2F%2Fmonte-kl.vercel.app&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=5000',
     fallbackImages: [
-      'https://monte-kl.vercel.app/images/hero.jpg',
-      'https://monte-kl.vercel.app/hero.jpg',
+      'https://image.thum.io/get/width/1280/crop/720/noanimate/https://monte-kl.vercel.app',
+      'https://s.wordpress.com/mshots/v1/https%3A%2F%2Fmonte-kl.vercel.app?w=1280&h=720',
       'https://monte-kl.vercel.app/og-image.png',
     ],
     liveUrl: 'https://monte-kl.vercel.app',
@@ -128,10 +128,11 @@ function ProjectCard({ project, index }: ProjectCardProps) {
   }, [isHovered]);
 
   const getImageUrls = () => {
-    if (project.title === 'Monte Quad Kolašin') {
+    if (project.title === 'MonteQuad&Buggy tour Kolašin') {
       return [
-        `https://api.microlink.io/?url=${encodeURIComponent('https://monte-kl.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720`,
-        `https://image.thum.io/get/width/1280/crop/720/https://monte-kl.vercel.app`,
+        `https://api.microlink.io/?url=${encodeURIComponent('https://monte-kl.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=5000`,
+        `https://image.thum.io/get/width/1280/crop/720/noanimate/https://monte-kl.vercel.app`,
+        `https://s.wordpress.com/mshots/v1/${encodeURIComponent('https://monte-kl.vercel.app')}?w=1280&h=720`,
         'https://monte-kl.vercel.app/og-image.png',
       ];
     }
