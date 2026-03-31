@@ -53,6 +53,23 @@ const projects = [
     hasRealImage: true,
     status: 'DEPLOYED',
   },
+  {
+    id: 4,
+    title: 'Apex Gym',
+    description: 'A powerful and dynamic gym website for Apex Gym. Features modern design, membership plans, training programs, and a motivating user experience built for fitness enthusiasts.',
+    tech: ['REACT', 'TYPESCRIPT', 'TAILWIND', 'VITE'],
+    image: 'https://apex-gym1.vercel.app/og-image.png',
+    fallbackImages: [
+      'https://api.microlink.io/?url=https%3A%2F%2Fapex-gym1.vercel.app&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=5000',
+      'https://image.thum.io/get/width/1280/crop/720/noanimate/https://apex-gym1.vercel.app',
+      'https://s.wordpress.com/mshots/v1/https%3A%2F%2Fapex-gym1.vercel.app?w=1280&h=720',
+    ],
+    liveUrl: 'https://apex-gym1.vercel.app/',
+    githubUrl: 'https://github.com/anunnaki7/apex-gym',
+    featured: false,
+    hasRealImage: true,
+    status: 'DEPLOYED',
+  },
 
 ];
 
@@ -151,6 +168,14 @@ function ProjectCard({ project, index }: ProjectCardProps) {
         `https://s.wordpress.com/mshots/v1/https://villavillekulla.vercel.app?w=1280&h=720`,
         `https://api.microlink.io/?url=${encodeURIComponent('https://villavillekulla.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&waitForTimeout=6000`,
         'https://villavillekulla.vercel.app/og-image.png',
+      ];
+    }
+    if (project.title === 'Apex Gym') {
+      return [
+        'https://apex-gym1.vercel.app/og-image.png',
+        `https://api.microlink.io/?url=${encodeURIComponent('https://apex-gym1.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=5000`,
+        `https://image.thum.io/get/width/1280/crop/720/noanimate/https://apex-gym1.vercel.app`,
+        `https://s.wordpress.com/mshots/v1/${encodeURIComponent('https://apex-gym1.vercel.app')}?w=1280&h=720`,
       ];
     }
     return [];
@@ -252,7 +277,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               <motion.img
                 src={getCurrentImageSrc()}
                 alt={project.title}
-                className={`w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                className={`w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${project.title === 'MonteQuad&Buggy tour Kolašin' ? 'object-top' : 'object-center'}`}
                 onLoad={() => setImageLoaded(true)}
                 onError={handleImageError}
                 animate={{ 
