@@ -277,7 +277,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               <motion.img
                 src={getCurrentImageSrc()}
                 alt={project.title}
-                className={`w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${project.title === 'MonteQuad&Buggy tour Kolašin' ? 'object-top' : 'object-center'}`}
+                className={`w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${project.title === 'MonteQuad&Buggy tour Kolašin' ? 'object-[center_20%]' : 'object-center'}`}
                 onLoad={() => setImageLoaded(true)}
                 onError={handleImageError}
                 animate={{ 
