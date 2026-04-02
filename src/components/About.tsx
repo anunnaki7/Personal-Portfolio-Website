@@ -74,7 +74,7 @@ export function About() {
                   transition={{ delay: 0.8 }}
                 >
                   <div className="text-center">
-                    <div className="text-2xl sm:text-3xl font-bold text-[#ff0040] neon-glow">1+</div>
+                    <div className="text-2xl sm:text-3xl font-bold text-[#ff0040] neon-glow">2+</div>
                     <div className="text-sm text-gray-500">Years Exp</div>
                   </div>
                   <div className="text-center">
