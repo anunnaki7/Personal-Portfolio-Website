@@ -765,7 +765,7 @@ export function CodeEditorHero({ onLogoClick, onUltraModeActivate }: CodeEditorH
             className="font-mono text-[11px] md:text-xs text-gray-500/60 tracking-wider"
             style={{ fontFamily: "'Fira Code', 'JetBrains Mono', monospace" }}
           >
-            <span className="text-[#ff0040]/50">{'>'}</span> building bold web experiences since 2026
+            <span className="text-[#ff0040]/50">{'>'}</span> building bold web experiences since 2024
           </span>
         </motion.div>
 
