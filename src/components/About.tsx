@@ -61,7 +61,9 @@ export function About() {
                   animate={isInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ delay: 0.5 }}
                 >
-                  <span className="text-[#ff0040] font-bold">Hello, World!</span> I am a Vibe Coding developer from Montenegro with over one year of hands-on experience building modern and visually powerful web experiences. I focus on clean code, performance, and bold design. My goal is to create digital products that feel confident, fast, and different.
+                  <span className="text-[#ff0040] font-bold">Hello, World!</span> I am a Vibe Coding developer from Montenegro, dedicated to building visually powerful and high-performance web experiences.
+                  <br /><br />
+                  I focus on clean code, speed, and bold design. My goal is to create digital products that feel confident, fast, and different.
                 </motion.p>
 
                 {/* Stats */}
