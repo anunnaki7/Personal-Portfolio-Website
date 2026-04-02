@@ -18,7 +18,7 @@ The website is fast, responsive, SEO optimized, and deployed online.
 [https://nikolalutovac-portfolio.vercel.app/](https://nikolalutovac-portfolio.vercel.app/)
 
 ## 📸 Screenshot
-![Website Screenshot](public/portfolio.png)
+![Website Screenshot](public/myportfolio.png)
 
 ## 💡 About The Project
 This project is my personal developer portfolio where I present:
