@@ -463,7 +463,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}
       >
         <span className="text-[#ff003c]/50">{'<'}</span>
-        {' '}NIKOLA LUTOVAC © 2026{' '}
+        {' '}NIKOLA LUTOVAC © 2024{' '}
         <span className="text-[#ff003c]/50">{'/>'}</span>
       </div>
 
