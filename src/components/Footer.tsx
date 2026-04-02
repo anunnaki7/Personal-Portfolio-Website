@@ -110,7 +110,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-[#ff0040]/10 text-center">
           <p className="text-gray-500 text-sm font-mono">
-            <span className="text-[#ff0040]">&lt;/&gt;</span> Built with passion by Nikola Lutovac © {currentYear}
+            <span className="text-[#ff0040]">&lt;/&gt;</span> Built with passion by Nikola Lutovac © {2024}
           </p>
         </div>
       </div>
