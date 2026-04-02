@@ -505,7 +505,7 @@ export function Projects() {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2 }}
           >
-            <span className="text-white">MY </span>
+            <span className="text-white">&lt;MY </span>
             <motion.span
               className="text-[#ff0040]"
               animate={{
@@ -519,6 +519,7 @@ export function Projects() {
             >
               PROJECTS
             </motion.span>
+            <span className="text-white">/&gt;</span>
           </motion.h2>
 
           {/* Underline */}
