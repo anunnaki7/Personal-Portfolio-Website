@@ -497,41 +497,20 @@ export function Projects() {
             </motion.span>
           </motion.div>
 
-          {/* MY PROJECTS - Orbitron font + animirani neon glow */}
+          {/* MY PROJECTS heading */}
           <motion.h2
-            className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
-            style={{ fontFamily: "'Orbitron', sans-serif" }}
+            className="text-4xl md:text-5xl font-bold font-['Orbitron'] mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2 }}
           >
             <span className="text-white">&lt;MY </span>
-            <motion.span
-              className="text-[#ff0040]"
-              animate={{
-                textShadow: [
-                  '0 0 10px rgba(255,0,64,0.8), 0 0 20px rgba(255,0,64,0.5), 0 0 40px rgba(255,0,64,0.3)',
-                  '0 0 20px rgba(255,0,64,1), 0 0 40px rgba(255,0,64,0.8), 0 0 80px rgba(255,0,64,0.5), 0 0 120px rgba(255,0,64,0.2)',
-                  '0 0 10px rgba(255,0,64,0.8), 0 0 20px rgba(255,0,64,0.5), 0 0 40px rgba(255,0,64,0.3)',
-                ],
-              }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              PROJECTS
-            </motion.span>
+            <span className="text-[#ff0040] neon-glow">PROJECTS</span>
             <span className="text-white">/&gt;</span>
           </motion.h2>
 
-          {/* Underline */}
-          <motion.div
-            className="w-20 h-1 bg-gradient-to-r from-transparent via-[#ff0040] to-transparent mx-auto rounded-full"
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            style={{
-              boxShadow: '0 0 10px rgba(255,0,64,0.8), 0 0 20px rgba(255,0,64,0.4)',
-            }}
-          />
+          {/* Same underline style as ABOUT */}
+          <div className="w-24 h-1 bg-[#ff0040] mx-auto rounded-full glow-box" />
 
           <motion.p
             className="text-gray-500 mt-4 max-w-xl mx-auto text-sm md:text-base font-mono"
