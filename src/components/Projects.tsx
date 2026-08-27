@@ -70,6 +70,23 @@ const projects = [
     hasRealImage: true,
     status: 'DEPLOYED',
   },
+  {
+    id: 5,
+    title: 'Argamenon IT Cafe',
+    description: 'A terminal-inspired website for an IT cafe in Belgrade, created for developers, designers, and remote workers. Features an interactive shell, bilingual content, workspace details, and a distinctive coffee-meets-code experience.',
+    tech: ['REACT', 'TYPESCRIPT', 'TAILWIND', 'VITE'],
+    image: 'https://api.microlink.io/?url=https%3A%2F%2Fargamenon-it-cafe.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=10000',
+    fallbackImages: [
+      'https://raw.githubusercontent.com/anunnaki7/Argamenon-It-cafe/main/public/images/argamenon.png',
+      'https://image.thum.io/get/width/1280/crop/720/noanimate/https://argamenon-it-cafe.vercel.app/',
+      'https://s.wordpress.com/mshots/v1/https%3A%2F%2Fargamenon-it-cafe.vercel.app%2F?w=1280&h=720',
+    ],
+    liveUrl: 'https://argamenon-it-cafe.vercel.app/',
+    githubUrl: 'https://github.com/anunnaki7/Argamenon-It-cafe',
+    featured: false,
+    hasRealImage: true,
+    status: 'DEPLOYED',
+  },
 ];
 
 interface ProjectCardProps {
@@ -141,6 +158,14 @@ function ProjectCard({ project, index }: ProjectCardProps) {
         `https://api.microlink.io/?url=${encodeURIComponent('https://apex-gym1.vercel.app')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=5000`,
         `https://image.thum.io/get/width/1280/crop/720/noanimate/https://apex-gym1.vercel.app`,
         `https://s.wordpress.com/mshots/v1/${encodeURIComponent('https://apex-gym1.vercel.app')}?w=1280&h=720`,
+      ];
+    }
+    if (project.title === 'Argamenon IT Cafe') {
+      return [
+        `https://api.microlink.io/?url=${encodeURIComponent('https://argamenon-it-cafe.vercel.app/')}&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720&waitForTimeout=10000`,
+        'https://raw.githubusercontent.com/anunnaki7/Argamenon-It-cafe/main/public/images/argamenon.png',
+        'https://image.thum.io/get/width/1280/crop/720/noanimate/https://argamenon-it-cafe.vercel.app/',
+        `https://s.wordpress.com/mshots/v1/${encodeURIComponent('https://argamenon-it-cafe.vercel.app/')}?w=1280&h=720`,
       ];
     }
     return [];
@@ -226,11 +251,11 @@ function ProjectCard({ project, index }: ProjectCardProps) {
               <motion.img
                 src={getCurrentImageSrc()}
                 alt={project.title}
-                className={`w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${project.title === 'MonteQuad&Buggy tour Kolašin' ? 'object-[center_20%]' : 'object-center'}`}
+                className={`w-full h-full transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${project.title === 'MonteQuad&Buggy tour Kolašin' ? 'object-cover object-[center_20%]' : project.title === 'Argamenon IT Cafe' ? 'object-contain object-top bg-[#0a0f0d]' : 'object-cover object-center'}`}
                 onLoad={() => setImageLoaded(true)}
                 onError={handleImageError}
                 animate={{
-                  scale: isHovered ? 1.08 : 1,
+                  scale: isHovered ? (project.title === 'Argamenon IT Cafe' ? 1.03 : 1.08) : 1,
                   filter: isHovered ? 'brightness(1.05) contrast(1.1) saturate(1.1)' : 'brightness(0.95) contrast(1.05)',
                 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -462,7 +487,6 @@ export function Projects() {
         {/* Section Title */}
         <div className="text-center mb-12 md:mb-16">
 
-          {/* < PORTFOLIO /> tag - matching About style */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -499,18 +523,35 @@ export function Projects() {
 
           {/* MY PROJECTS heading */}
           <motion.h2
-            className="text-4xl md:text-5xl font-bold font-['Orbitron'] mb-4"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold font-['Orbitron'] mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2 }}
           >
             <span className="text-white">&lt;MY </span>
-            <span className="text-[#ff0040] neon-glow">PROJECTS</span>
+            <motion.span
+              className="text-[#ff0040]"
+              animate={{
+                textShadow: [
+                  '0 0 10px rgba(255,0,64,0.8), 0 0 20px rgba(255,0,64,0.5), 0 0 40px rgba(255,0,64,0.3)',
+                  '0 0 20px rgba(255,0,64,1), 0 0 40px rgba(255,0,64,0.8), 0 0 80px rgba(255,0,64,0.5), 0 0 120px rgba(255,0,64,0.2)',
+                  '0 0 10px rgba(255,0,64,0.8), 0 0 20px rgba(255,0,64,0.5), 0 0 40px rgba(255,0,64,0.3)',
+                ],
+              }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              PROJECTS
+            </motion.span>
             <span className="text-white">/&gt;</span>
           </motion.h2>
 
           {/* Same underline style as ABOUT */}
-          <div className="w-24 h-1 bg-[#ff0040] mx-auto rounded-full glow-box" />
+          <motion.div
+            className="w-24 h-1 bg-[#ff0040] mx-auto rounded-full glow-box"
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={isInView ? { opacity: 1, scaleX: 1 } : {}}
+            transition={{ delay: 0.35, duration: 0.6, ease: 'easeOut' }}
+          />
 
           <motion.p
             className="text-gray-500 mt-4 max-w-xl mx-auto text-sm md:text-base font-mono"
